@@ -12,6 +12,6 @@ public class LoginService {
      * @return login results
      */
     public LoginResult login(LoginRequest request) {
-        return null;
+        return request.login();
     }
 }

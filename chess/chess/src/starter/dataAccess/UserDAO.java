@@ -3,6 +3,7 @@ import models.User;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /***
  * Stores and manages User data
@@ -30,7 +31,13 @@ public class UserDAO {
         }
         userMap.clear();
     }
-
+    public static boolean loginRequest(String username, String password){
+        if(userMap.containsKey(username)){
+            User u = userMap.get(username);
+            return Objects.equals(u.getPassword(), password);
+        }
+        return false;
+    }
     /**
      * checks to see if user is in map
      * @param user that is being checked
@@ -43,6 +50,7 @@ public class UserDAO {
         }
         return userMap.containsValue(user);
     }
+
 
     /**
      * adds new user to map
