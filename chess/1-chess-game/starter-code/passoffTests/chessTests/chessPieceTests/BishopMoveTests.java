@@ -43,23 +43,23 @@ public class BishopMoveTests {
         bishop = TestFactory.getNewPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP);
         board.addPiece(position, bishop);
 
-        //- -
+        //- - down left
         validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(4, 3), null));
         validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(3, 2), null));
         validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(2, 1), null));
 
-        // + -
+        // + - down right
         validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(6, 3), null));
         validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(7, 2), null));
         validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(8, 1), null));
 
-        // - +
+        // - + up left
         validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(4, 5), null));
         validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(3, 6), null));
         validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(2, 7), null));
         validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(1, 8), null));
 
-        // + +
+        // + + up right
         validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(6, 5), null));
         validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(7, 6), null));
         validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(8, 7), null));

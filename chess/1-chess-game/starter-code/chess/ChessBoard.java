@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.Set;
+
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * 
@@ -16,6 +18,9 @@ public interface ChessBoard {
      */
     void addPiece(ChessPosition position, ChessPiece piece);
 
+    public Set<ChessMove> getBlackMoves();
+
+    public Set<ChessMove> getWhiteMoves();
     /**
      * Gets a chess piece on the chessboard
      * 

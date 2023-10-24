@@ -12,6 +12,7 @@ public interface ChessMove {
      */
     ChessPosition getStartPosition();
 
+    void setPromotionPiece(ChessPiece.PieceType promotionPiece);
     /**
      * @return ChessPosition of ending location
      */
@@ -23,5 +24,7 @@ public interface ChessMove {
      * 
      * @return Type of piece to promote a pawn to, or null if no promotion
      */
+
+    int hashCode();
     ChessPiece.PieceType getPromotionPiece();
 }

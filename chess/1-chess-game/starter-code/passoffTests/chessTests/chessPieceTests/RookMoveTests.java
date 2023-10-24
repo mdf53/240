@@ -1,4 +1,4 @@
-package passoffTests.chessTests.chessPieceTests;
+package chessTests.chessPieceTests;
 
 import chess.*;
 import org.junit.jupiter.api.Assertions;
@@ -66,7 +66,7 @@ public class RookMoveTests {
         validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(8, 3), null));
 
         //check
-        Set<ChessMove> pieceMoves = new HashSet<>(rook.pieceMoves(board, position));
+         Set<ChessMove> pieceMoves = new HashSet<>(rook.pieceMoves(board, position));
         Assertions.assertEquals(validMoves, pieceMoves,
                 "ChessPiece pieceMoves did not return the correct moves");
     }

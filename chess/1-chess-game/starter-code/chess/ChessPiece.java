@@ -10,6 +10,10 @@ import java.util.Collection;
  */
 public interface ChessPiece {
 
+    ChessPosition getPosition();
+
+    void setPromotion(PieceType promotionPiece);
+
     /**
      * The various different chess piece options
      */
@@ -22,9 +26,13 @@ public interface ChessPiece {
         PAWN
     }
 
-    /**
-     * @return Which team this chess piece belongs to
-     */
+    public void setPosition(ChessPosition position);
+
+
+
+        /**
+         * @return Which team this chess piece belongs to
+         */
     ChessGame.TeamColor getTeamColor();
 
     /**
