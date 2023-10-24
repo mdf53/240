@@ -11,7 +11,7 @@ public class UserDAO {
     /**
      * Map of Users
      */
-    private Map<String, User> userMap;
+    private static Map<String, User> userMap;
 
     /**
      * Default constructor. Initializes userMap
