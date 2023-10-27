@@ -1,5 +1,8 @@
 package services;
 
+import dataAccess.DataAccessException;
+import dataAccess.GameDAO;
+import models.Game;
 import requests.CreateGameRequest;
 import results.CreateGameResult;
 
@@ -10,11 +13,21 @@ public class CreateGameService {
     /**
      * Creates a game
      * @param request is the request info
-     * @param authtoken is the header token
+     * @param authToken is the header token
      * @return the result
      */
-    CreateGameResult createGame(CreateGameRequest request, String authtoken){
+    public CreateGameResult createGame(CreateGameRequest request, String authToken) throws DataAccessException{
 
-        return request.createGame(authtoken);
+        CreateGameResult result = new CreateGameResult();
+        try {
+
+            Game game = new Game(request.getGameName());
+            GameDAO.createGame(game, authToken);
+            result.setGameID(game.getGameID());
+        }
+        catch(DataAccessException exception){
+            result.setMessage(exception.getMessage());
+        }
+        return result;
     }
 }

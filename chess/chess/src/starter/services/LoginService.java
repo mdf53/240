@@ -7,6 +7,9 @@ import requests.LoginRequest;
 import results.LoginResult;
 import results.RegisterResults;
 
+import java.util.Objects;
+import java.util.UUID;
+
 /**
  * Service for Login API
  */
@@ -25,9 +28,11 @@ public class LoginService {
 //        }
         LoginResult results = new LoginResult(null);
         try {
-            User u = new User(request.getUsername(), request.getPassword(), null);
-            if(UserDAO.alreadyUser(u)) {
-
+            User user = new User(request.getUsername(), request.getPassword(), null);
+            User temp = UserDAO.findUser(user.getUsername());
+            if(UserDAO.loginAttempt(user, temp)){
+                results.setUsername(user.getUsername());
+                results.setAuthToken(UUID.randomUUID().toString());
             }
         }catch(DataAccessException ex){
             results.setMessage(ex.getMessage());

@@ -22,13 +22,15 @@ public class GameDAO {
      * @param g is the game being created (added to game map).
      * @throws DataAccessException if the game already exists
      */
-    public static void createGame(Game g) throws DataAccessException{
+    public static void createGame(Game g, String authToken) throws DataAccessException{
         //add a new game to the map
+        if(!AuthDAO.validToken(authToken)){
+            throw new DataAccessException("Error: unauthorized");
+        }
         if(gameMap.containsValue(g)){
             throw new DataAccessException("Game already exists.");
         }
-        String gameID = g.getGameID();
-        gameMap.put(gameID, g);
+        gameMap.put(g.getGameName(), g);
     }
 
     /**
@@ -73,7 +75,6 @@ public class GameDAO {
         if(!gameMap.containsValue(game)){
             throw new DataAccessException("Game not found");
         }
-        game.addObservor(id);
     }
 
     /**

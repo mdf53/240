@@ -1,7 +1,8 @@
 package models;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.UUID;
+
+import static java.lang.Math.abs;
 
 /**
  * Game object.
@@ -10,7 +11,7 @@ public class Game {
     /**
      * ID for game
      */
-    private int gameID;
+    private Integer gameID;
     /**
      * username for white player
      */
@@ -23,34 +24,38 @@ public class Game {
      * name of game
      */
     private String gameName;
-    private List<String> observerList;
+
+
+    public void setGameID(int gameID) {
+        this.gameID = gameID;
+    }
+
+    public void setGameName(String gameName) {
+        this.gameName = gameName;
+    }
 
 
     /**
      * Constructor
-     * @param iD gameId
      * @param wUser whiteUsername
      * @param bUser blackUsername
      * @param name gameName
      */
-    public Game(String iD, String wUser, String bUser, String name){
-    gameID = Integer.parseInt(iD);
+    public Game(String wUser, String bUser, String name){
+    gameID = abs(UUID.randomUUID().hashCode());
     whiteUsername = wUser;
     blackUsername = bUser;
     gameName = name;
-    observerList = new ArrayList<>();
-//    game = g;
 }
-    public Game(String ID, String name){
-        gameID = Integer.parseInt(ID);
+    public Game(String name){
+        gameID = abs(UUID.randomUUID().hashCode());
         whiteUsername = null;
         blackUsername = null;
         gameName = name;
-        observerList = new ArrayList<>();
     }
 
-public String getGameID(){
-    return Integer.toString(gameID);
+public Integer getGameID(){
+    return gameID;
 }
 public void setWhiteUsername(String username){
         whiteUsername = username;
@@ -63,12 +68,6 @@ public void setBlackUsername(String username){
 }
 public String getBlackUsername(){
     return blackUsername;
-}
-public void addObservor(String name){
-        observerList.add(name);
-}
-public List<String> getObserverList(){
-        return observerList;
 }
 public String getGameName(){
     return gameName;

@@ -1,5 +1,6 @@
 package services;
 import dataAccess.*;
+import models.Authtoken;
 import models.User;
 import requests.RegisterRequest;
 import results.RegisterResults;
@@ -19,9 +20,9 @@ public class RegisterService {
             try {
                 User u = new User(request.getUsername(), request.getPassword(), request.getEmail());
                 if(!UserDAO.alreadyUser(u)) {
-                    UserDAO.addNewUser(u);
+                    Authtoken token = UserDAO.addNewUser(u);
                     results.setUsername(u.getUsername());
-                    results.setAuthToken(AuthDAO.getAuthToken(u.getUsername()));
+                    results.setAuthToken(token.getAuthToken());
                 }
             }catch(DataAccessException ex){
                 results.setMessage(ex.getMessage());

@@ -21,19 +21,7 @@ public class CreateGameRequest {
     public CreateGameRequest(String name) throws DataAccessException {
         gameName = name;
     }
-    public CreateGameResult createGame(String authToken){
-        CreateGameResult result = new CreateGameResult();
-        try {
-            GameDAO.createGame(new Game(authToken, gameName));
-        }
-        catch(DataAccessException exception){
-            result = throwError();
-        }
-        return result;
-    }
-    public CreateGameResult throwError(){
-        return new CreateGameResult("Error: Unable to create game");
-    }
+
     public String getGameName(){
         return gameName;
     }

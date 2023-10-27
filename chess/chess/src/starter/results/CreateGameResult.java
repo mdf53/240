@@ -10,6 +10,7 @@ public class CreateGameResult {
      * error message
      */
     private String message;
+    private Integer gameID;
 
     /**
      * Constructor w/ message = error.
@@ -17,7 +18,9 @@ public class CreateGameResult {
      */
     public CreateGameResult(String m){
         message = m;
+        gameID = null;
     }
+
 
     /**
      * Constructor w/out message = success
@@ -30,4 +33,11 @@ public class CreateGameResult {
         return message;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setGameID(Integer gameID) {
+        this.gameID = gameID;
+    }
 }

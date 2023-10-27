@@ -1,9 +1,11 @@
 package dataAccess;
+import models.Authtoken;
 import models.User;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 /***
  * Stores and manages User data
@@ -52,13 +54,15 @@ public class UserDAO {
      * @param u user to be added
      * @throws DataAccessException if user is null or already in the map
      */
-    public static void addNewUser(User u) throws DataAccessException{
+    public static Authtoken addNewUser(User u) throws DataAccessException{
         if(u.getPassword()==null) {
             throw new DataAccessException("Error: bad request");
         }
         if(!alreadyUser(u)){
             userMap.put(u.getUsername(), u);
-            AuthDAO.insertAuth(u.getUsername());
+            Authtoken token = new Authtoken(u.getUsername(), UUID.randomUUID().toString());
+            AuthDAO.insertAuth(token);
+            return token;
         } else{
             throw new DataAccessException("Error: bad request");
         }
@@ -74,7 +78,18 @@ public class UserDAO {
         if(userMap.containsKey(name)){
             return userMap.get(name);
         }
-        throw new DataAccessException("Error: bad request");
+        throw new DataAccessException("Error: unauthorized");
+    }
+
+    public static boolean loginAttempt(User a, User b) throws DataAccessException{
+        if(!Objects.equals(a.getUsername(), b.getUsername())){
+            throw new DataAccessException("Error: unauthorized");
+        }
+        if(!Objects.equals(a.getPassword(), b.getPassword())){
+            throw new DataAccessException("Error: unauthorized");
+        }
+        return true;
+
     }
 
 }

@@ -27,10 +27,8 @@ public class LoginHandler extends BaseHandler {
             result = service.login(request);
             if(result.getMessage() == null){
                 response.status(200);
-            } else if (Objects.equals(result.getMessage(), "Error: bad request")){
-                response.status(400);
-            } else if (Objects.equals(result.getMessage(), "Error: already taken")){
-                response.status(403);
+            } else if (Objects.equals(result.getMessage(), "Error: unauthorized")){
+                response.status(401);
             } else{
                 response.status(500);
             }

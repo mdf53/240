@@ -18,7 +18,7 @@ public class Authtoken {
      * @param token that will be set to authToken
      * @param name that will be set to username
      */
-    Authtoken(String token, String name){
+    public Authtoken(String name, String token){
         authToken = token;
         username = name;
     }

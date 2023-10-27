@@ -11,9 +11,9 @@ import java.util.*;
  */
 public class AuthDAO {
     /**
-     * List of authTokens
+     * Map of auth tokens. Authtoken string, Authtoken that contains username
      */
-    private static Map<String, String> tokenList = new HashMap<>();
+    private static Map<String, Authtoken> tokenList = new HashMap<>();
 
     /**
      * default constructor. Initialized the tokenList.
@@ -29,17 +29,18 @@ public class AuthDAO {
 
     /**
      * Inserts an authtoken into the list.
-     * @param username to be inserted.
+     * @param token to be inserted.
      * @throws DataAccessException if the token is already in list.
      */
-    public static void insertAuth(String username) throws DataAccessException{
-        if(tokenList.containsKey(username)){
-            throw new DataAccessException("Token already exists");
+    public static void insertAuth(Authtoken token) throws DataAccessException{
+        if(tokenList.containsKey(token.getAuthToken())){
+            throw new DataAccessException("Error");
         }
-        tokenList.put(username, UUID.randomUUID().toString());
+        tokenList.put(token.getAuthToken(), token);
     }
 
-    public static String getAuthToken(String username){
+    public static Authtoken getAuthToken(String username){
+
         return tokenList.get(username);
     }
     /**
@@ -51,6 +52,16 @@ public class AuthDAO {
 //        return new ArrayList<>(tokenList);
         //FIX ME
         return null;
+    }
+
+    public static void removeToken(String authToken) throws DataAccessException{
+        if (tokenList.remove(authToken) == null) {
+            throw new DataAccessException("Error: unauthorized");
+        }
+    }
+
+    public static boolean validToken(String authToken){
+        return tokenList.containsKey(authToken);
     }
 
 
