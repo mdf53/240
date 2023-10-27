@@ -12,7 +12,7 @@ public class JoinGameService {
      * @param authToken from header
      * @return results
      */
-    JoinGameResult joinGame(JoinGameRequest request, String authToken) throws DataAccessException {
+    public JoinGameResult joinGame(JoinGameRequest request, String authToken) throws DataAccessException {
         return request.joinGame(authToken);
     }
 }

@@ -19,7 +19,6 @@ public class JoinGameResult {
     /**
      * if they are an observor or not
      */
-    private boolean isObservor;
 
     /**
      * Successful constructor
@@ -30,7 +29,6 @@ public class JoinGameResult {
         playerColor = color;
         gameID = ID;
         message = null;
-        isObservor = false;
     }
 
     /**
@@ -41,7 +39,6 @@ public class JoinGameResult {
         message = m;
         playerColor = null;
         gameID = null;
-        isObservor = false;
     }
     public String getGameID(){
         return gameID;
