@@ -2,5 +2,5 @@ package handlers;
 /**
  * Converts an HTTP request into usable Java objects and data.
  */
-public class JoinGameHandler {
+public class JoinGameHandler extends BaseHandler{
 }

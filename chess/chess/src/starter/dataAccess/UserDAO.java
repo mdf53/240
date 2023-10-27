@@ -44,7 +44,7 @@ public class UserDAO {
      * @return true if already in, false if not
      * @throws DataAccessException if user is null
      */
-    public boolean alreadyUser(User user) throws DataAccessException{
+    public static boolean alreadyUser(User user) throws DataAccessException{
         if(user == null){
             throw new DataAccessException("Please enter a valid user");
         }
@@ -57,9 +57,10 @@ public class UserDAO {
      * @param u user to be added
      * @throws DataAccessException if user is null or already in the map
      */
-    public void AddNewUser(User u) throws DataAccessException{
+    public static void addNewUser(User u) throws DataAccessException{
         if(!alreadyUser(u)){
             //userMap.put(String???, u); insert user with string and User.
+            userMap.put(u.getUsername(), u);
         } else{
             throw new DataAccessException("User already exists.");
         }
@@ -71,7 +72,7 @@ public class UserDAO {
      * @return the user
      * @throws DataAccessException if username isn't connected to a user
      */
-    public User findUser(String name) throws DataAccessException{
+    public static User findUser(String name) throws DataAccessException{
         if(userMap.containsKey(name)){
             return userMap.get(name);
         }

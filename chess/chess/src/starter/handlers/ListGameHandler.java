@@ -2,5 +2,5 @@ package handlers;
 /**
  * Converts an HTTP request into usable Java objects and data.
  */
-public class ListGameHandler {
+public class ListGameHandler extends BaseHandler{
 }

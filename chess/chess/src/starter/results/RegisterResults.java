@@ -34,6 +34,7 @@ public class RegisterResults {
         message = null;
     }
 
+
     /**
      * Failed Constructor
      * @param m is the error message

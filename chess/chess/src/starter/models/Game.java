@@ -10,7 +10,7 @@ public class Game {
     /**
      * ID for game
      */
-    private String gameID;
+    private int gameID;
     /**
      * username for white player
      */
@@ -34,7 +34,7 @@ public class Game {
      * @param name gameName
      */
     public Game(String iD, String wUser, String bUser, String name){
-    gameID = iD;
+    gameID = Integer.parseInt(iD);
     whiteUsername = wUser;
     blackUsername = bUser;
     gameName = name;
@@ -42,7 +42,7 @@ public class Game {
 //    game = g;
 }
     public Game(String ID, String name){
-        gameID = ID;
+        gameID = Integer.parseInt(ID);
         whiteUsername = null;
         blackUsername = null;
         gameName = name;
@@ -50,7 +50,7 @@ public class Game {
     }
 
 public String getGameID(){
-    return gameID;
+    return Integer.toString(gameID);
 }
 public void setWhiteUsername(String username){
         whiteUsername = username;
