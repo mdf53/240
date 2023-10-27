@@ -11,26 +11,17 @@ public class RegisterResults {
     /**
      * new password
      */
-    private String password;
-    /**
-     * new email
-     */
-    private String email;
-    /**
-     * error message
-     */
+    private String authToken;
     private String message;
 
     /**
      * Successful Constructor
      * @param name is the username
-     * @param pass is the password
-     * @param mail is the email
+     * @param authToken is the authToken
      */
-    public RegisterResults(String name, String pass, String mail){
+    public RegisterResults(String name, String authToken){
         username = name;
-        password = pass;
-        email = mail;
+        this.authToken = authToken;
         message = null;
     }
 
@@ -41,8 +32,7 @@ public class RegisterResults {
      */
     public RegisterResults(String m){
         username = null;
-        password = null;
-        email = null;
+        authToken = null;
         message = m;
     }
     public String getMessage(){
@@ -51,11 +41,18 @@ public class RegisterResults {
     public String getUsername(){
         return username;
     }
-    public String getPassword(){
-        return password;
+    public String getAuthToken(){
+        return authToken;
     }
-    public String getEmail(){
-        return email;
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+    public void setUsername(String username){
+        this.username = username;
+    }
+    public void setAuthToken(String authToken){
+        this.authToken = authToken;
     }
 
 }

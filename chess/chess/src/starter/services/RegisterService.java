@@ -1,5 +1,6 @@
 package services;
-import dataAccess.DataAccessException;
+import dataAccess.*;
+import models.User;
 import requests.RegisterRequest;
 import results.RegisterResults;
 
@@ -13,10 +14,18 @@ public class RegisterService {
      * @return results of registration
      */
     public RegisterResults register(RegisterRequest request) throws DataAccessException {
-
-        if(request.registerUser()){
-            return new RegisterResults(request.getUsername(), request.getPassword(), request.getEmail());
-        }
-        return new RegisterResults("Unable to register User.");
+//        UserDAO dao = new UserDAO();
+            RegisterResults results = new RegisterResults(null);
+            try {
+                User u = new User(request.getUsername(), request.getPassword(), request.getEmail());
+                if(!UserDAO.alreadyUser(u)) {
+                    UserDAO.addNewUser(u);
+                    results.setUsername(u.getUsername());
+                    results.setAuthToken(AuthDAO.getAuthToken(u.getUsername()));
+                }
+            }catch(DataAccessException ex){
+                results.setMessage(ex.getMessage());
+            }
+            return results;
     }
 }

@@ -49,7 +49,15 @@ public class LoginResult {
         return authToken;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
 
-
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }

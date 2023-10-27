@@ -26,13 +26,6 @@ public class LoginRequest {
         username = user;
         password = pass;
     }
-    public LoginResult login(){
-        if(UserDAO.loginRequest(username, password)){
-            return new LoginResult(username, password);
-        } else{
-            return new LoginResult("User not found");
-        }
-    }
 
         // … Getters and Setters for username and password properties
     public String getUsername(){

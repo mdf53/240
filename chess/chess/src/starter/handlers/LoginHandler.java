@@ -1,22 +1,43 @@
 package handlers;
 
 import com.google.gson.Gson;
+import dataAccess.DataAccessException;
 import org.glassfish.grizzly.compression.lzma.impl.Base;
 import requests.LoginRequest;
+import requests.RegisterRequest;
 import results.LoginResult;
+import results.RegisterResults;
 import services.LoginService;
+import services.RegisterService;
+
+import java.util.Objects;
+
 /**
  * Converts an HTTP request into usable Java objects and data.
  */
 public class LoginHandler extends BaseHandler {
 
-    public spark.Response handleRequest(spark.Request req, spark.Response response){
-        LoginRequest request = (LoginRequest) Gson.fromJson(req.body(), LoginRequest.class);
+    public Object handleRequest(spark.Request req, spark.Response response){
+        Gson gson = new Gson();
+        //make new service object
+        LoginRequest request = gson.fromJson(req.body(), LoginRequest.class);
+        LoginResult result = new LoginResult(null);
+        try{
+            LoginService service = new LoginService();
+            result = service.login(request);
+            if(result.getMessage() == null){
+                response.status(200);
+            } else if (Objects.equals(result.getMessage(), "Error: bad request")){
+                response.status(400);
+            } else if (Objects.equals(result.getMessage(), "Error: already taken")){
+                response.status(403);
+            } else{
+                response.status(500);
+            }
+        } catch(DataAccessException ex){
+            response.status(400);
+        }
 
-        LoginService service = new LoginService();
-        LoginResult result = service.login(request);
-
-        return Gson.toJson(result);
-//        return null;
+        return gson.toJson(result);
     }
 }

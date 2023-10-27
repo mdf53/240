@@ -13,45 +13,44 @@ public class AuthDAO {
     /**
      * List of authTokens
      */
-    private static Set<Authtoken> tokenList;
+    private static Map<String, String> tokenList = new HashMap<>();
 
     /**
      * default constructor. Initialized the tokenList.
      */
-    public AuthDAO(){
-        tokenList = new HashSet<>();
-    }
 
     /**
      * clears the tokenList
      * @throws DataAccessException if list is already empty
      */
-    public static void clear() throws DataAccessException {
-        if(tokenList.isEmpty()){
-            throw new DataAccessException("Token List is already empty");
-        }
+    public static void clear(){
         tokenList.clear();
     }
 
     /**
      * Inserts an authtoken into the list.
-     * @param token to be inserted.
+     * @param username to be inserted.
      * @throws DataAccessException if the token is already in list.
      */
-    public void insertAuth(Authtoken token) throws DataAccessException{
-        if(tokenList.contains(token)){
+    public static void insertAuth(String username) throws DataAccessException{
+        if(tokenList.containsKey(username)){
             throw new DataAccessException("Token already exists");
         }
-        tokenList.add(token);
+        tokenList.put(username, UUID.randomUUID().toString());
     }
 
+    public static String getAuthToken(String username){
+        return tokenList.get(username);
+    }
     /**
      *returns the list of all auth tokens
      * @return the tokenList
      * @throws DataAccessException if there aren't any tokens to return
      */
     public List<Authtoken> getAllTokens() throws DataAccessException{
-        return new ArrayList<>(tokenList);
+//        return new ArrayList<>(tokenList);
+        //FIX ME
+        return null;
     }
 
 

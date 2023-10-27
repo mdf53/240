@@ -11,14 +11,11 @@ public class GameDAO {
     /**
      * Map for the games. Has the ID and the Game
      */
-    private static Map<String, Game> gameMap;
+    private static Map<String, Game> gameMap = new HashMap<>();
 
     /**
      * Default constructor. Initialized the map for storing the games w/ the IDs.
      */
-    GameDAO(){
-        gameMap = new HashMap<>();
-    }
 
     /**
      * "creates" a game by adding it to the map.
@@ -91,9 +88,8 @@ public class GameDAO {
 
     /**
      * Clears the gameMap
-     * @throws DataAccessException if the map is already empty
      */
-    public static void clear() throws DataAccessException{
+    public static void clear(){
         //clear all games
         gameMap.clear();
     }

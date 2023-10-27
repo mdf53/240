@@ -12,23 +12,18 @@ public class UserDAO {
     /**
      * Map of Users
      */
-    private static Map<String, User> userMap;
+    private static Map<String, User> userMap = new HashMap<>();
 
     /**
      * Default constructor. Initializes userMap
      */
-    UserDAO(){
-        userMap = new HashMap<>();
-    }
+
 
     /**
      * clears map.
      * @throws DataAccessException if map is empty
      */
-    public static void clear() throws DataAccessException{
-        if(userMap.size() == 0){
-            throw new DataAccessException("userMap is already empty");
-        }
+    public static void clear() {
         userMap.clear();
     }
     public static boolean loginRequest(String username, String password){
@@ -45,8 +40,8 @@ public class UserDAO {
      * @throws DataAccessException if user is null
      */
     public static boolean alreadyUser(User user) throws DataAccessException{
-        if(user == null){
-            throw new DataAccessException("Please enter a valid user");
+        if(userMap.containsKey(user.getUsername())){
+            throw new DataAccessException("Error: already taken");
         }
         return userMap.containsValue(user);
     }
@@ -58,11 +53,14 @@ public class UserDAO {
      * @throws DataAccessException if user is null or already in the map
      */
     public static void addNewUser(User u) throws DataAccessException{
+        if(u.getPassword()==null) {
+            throw new DataAccessException("Error: bad request");
+        }
         if(!alreadyUser(u)){
-            //userMap.put(String???, u); insert user with string and User.
             userMap.put(u.getUsername(), u);
+            AuthDAO.insertAuth(u.getUsername());
         } else{
-            throw new DataAccessException("User already exists.");
+            throw new DataAccessException("Error: bad request");
         }
     }
 
@@ -76,7 +74,7 @@ public class UserDAO {
         if(userMap.containsKey(name)){
             return userMap.get(name);
         }
-        throw new DataAccessException("Username not connected to a user");
+        throw new DataAccessException("Error: bad request");
     }
 
 }

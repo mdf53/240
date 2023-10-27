@@ -26,7 +26,7 @@ public class Server {
 //        Spark.delete("/db", (req,res) -> (new ClearHandler()).handleRequest(req,res));
 //        //if HTTP is POST, login. if DELETE logout
 //        Spark.post("/session", (req,res) -> (new LoginHandler()).handleRequest(req,res));
-//        Spark.delete("/session", (req,res) -> (new LoginHandler()).handleRequest(req,res));
+//        Spark.delete("/session", (req,res) -> (new LogoutHandler()).handleRequest(req,res));
 //        //if HTTP is GET, list games. if POST create game, if PUT join game
 ////        Spark.post("/game", (req,res) -> (new CreateGameHandler()).handleRequest(req,res));
 ////        Spark.get("/game", (req,res) -> (new ListGameHandler()).handleRequest(req,res));
@@ -45,8 +45,9 @@ public static void main(String[] args) {
         Spark.externalStaticFileLocation("src/web");
 
         //API functions
-        Spark.delete("/db",  new ClearHandler());
-        Spark.post("/user", (req, res) -> (new RegisterHandler()).handleRequest(req, res));        Spark.post("/session", new LoginHandler());
+        Spark.delete("/db", (req,res) -> (new ClearHandler()).handleRequest(req,res));
+        Spark.post("/user", (req, res) -> (new RegisterHandler()).handleRequest(req, res));
+        Spark.post("/session", (req,res) -> (new LoginHandler()).handleRequest(req,res));
         Spark.delete("/session", new LogoutHandler());
         Spark.get("/game", new ListGameHandler());
         Spark.post("/game", new CreateGameHandler());

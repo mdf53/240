@@ -2,6 +2,7 @@ package requests;
 import dataAccess.DataAccessException;
 import models.User;
 import dataAccess.UserDAO;
+import results.RegisterResults;
 
 /**
  * Request for Register API
@@ -31,15 +32,6 @@ public class RegisterRequest {
         username = user;
         password = pass;
         email = email1;
-    }
-    public boolean registerUser() throws DataAccessException {
-        try {
-            User u = UserDAO.findUser(username);
-            UserDAO.addNewUser(u);
-        }catch(DataAccessException ex){
-            throw ex;
-        }
-        return true;
     }
     public String getEmail(){
         return email;
