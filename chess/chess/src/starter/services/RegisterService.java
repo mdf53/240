@@ -15,7 +15,6 @@ public class RegisterService {
      * @return results of registration
      */
     public RegisterResults register(RegisterRequest request) throws DataAccessException {
-//        UserDAO dao = new UserDAO();
             RegisterResults results = new RegisterResults(null);
             try {
                 User u = new User(request.getUsername(), request.getPassword(), request.getEmail());

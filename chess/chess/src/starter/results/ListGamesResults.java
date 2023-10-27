@@ -1,54 +1,36 @@
 package results;
 
+import models.Game;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class ListGamesResults {
     /**
      * error message
      */
     String message;
-    /**
-     * ID of game
-     */
-    String gameID;
-    /**
-     * white username
-     */
-    String whiteUser;
-    /**
-     * black username
-     */
-    String blackUser;
-    /**
-     * name of game
-     */
-    String gameName;
+
+    ArrayList<Game> games = new ArrayList<>();
+
+    public ArrayList<Game> getGameList() {
+        return games;
+    }
+
+    public void setGameList(ArrayList<Game> gameList) {
+        this.games = gameList;
+    }
 
     public ListGamesResults(String m){
         message = m;
-        gameID = null;
-        whiteUser = null;
-        blackUser = null;
-        gameName = null;
-    }
-    public ListGamesResults(String id, String wu, String bu, String name){
-        message = null;
-        gameID = id;
-        whiteUser = wu;
-        blackUser = bu;
-        gameName = name;
+        games = new ArrayList<>();
     }
     public String getMessage(){
         return message;
     }
-    public String getGameID(){
-        return gameID;
-    }
-    public String getGameName(){
-        return gameName;
-    }
-    public String getWhiteUser(){
-        return whiteUser;
-    }
-    public String getBlackUser(){
-        return blackUser;
+
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

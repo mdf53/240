@@ -28,7 +28,9 @@ public class JoinGameHandler extends BaseHandler{
                 response.status(200);
             } else if (Objects.equals(result.getMessage(), "Error: bad request")){
                 response.status(400);
-            } else if (Objects.equals(result.getMessage(), "Error: already taken")){
+            } else if (Objects.equals(result.getMessage(), "Error: unauthorized")){
+                response.status(401);
+            }else if (Objects.equals(result.getMessage(), "Error: already taken")){
                 response.status(403);
             } else{
                 response.status(500);

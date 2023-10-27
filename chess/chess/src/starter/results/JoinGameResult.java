@@ -20,6 +20,18 @@ public class JoinGameResult {
      * if they are an observor or not
      */
 
+    public void setGameID(String gameID) {
+        this.gameID = gameID;
+    }
+
+    public void setPlayerColor(String playerColor) {
+        this.playerColor = playerColor;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     /**
      * Successful constructor
      * @param color is the player color to be set

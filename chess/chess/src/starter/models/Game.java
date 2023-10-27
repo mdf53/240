@@ -26,7 +26,7 @@ public class Game {
     private String gameName;
 
 
-    public void setGameID(int gameID) {
+    public void setGameID(Integer gameID) {
         this.gameID = gameID;
     }
 
@@ -34,19 +34,6 @@ public class Game {
         this.gameName = gameName;
     }
 
-
-    /**
-     * Constructor
-     * @param wUser whiteUsername
-     * @param bUser blackUsername
-     * @param name gameName
-     */
-    public Game(String wUser, String bUser, String name){
-    gameID = abs(UUID.randomUUID().hashCode());
-    whiteUsername = wUser;
-    blackUsername = bUser;
-    gameName = name;
-}
     public Game(String name){
         gameID = abs(UUID.randomUUID().hashCode());
         whiteUsername = null;

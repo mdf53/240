@@ -1,7 +1,6 @@
 package dataAccess;
 import models.Game;
 
-import javax.xml.crypto.Data;
 import java.util.*;
 
 /**
@@ -9,7 +8,7 @@ import java.util.*;
  * */
 public class GameDAO {
     /**
-     * Map for the games. Has the ID and the Game
+     * Map for the games. Has the name and the Game
      */
     private static Map<String, Game> gameMap = new HashMap<>();
 
@@ -24,7 +23,7 @@ public class GameDAO {
      */
     public static void createGame(Game g, String authToken) throws DataAccessException{
         //add a new game to the map
-        if(!AuthDAO.validToken(authToken)){
+        if(AuthDAO.invalidToken(authToken)){
             throw new DataAccessException("Error: unauthorized");
         }
         if(gameMap.containsValue(g)){
@@ -38,9 +37,15 @@ public class GameDAO {
      * @return the list of all of the games.
      * @throws DataAccessException if there are no games
      */
-    public List<Game> getAllGames() throws DataAccessException{
+    public static ArrayList<Game> getAllGames() throws DataAccessException{
         //return all the games in the map.
-        return new ArrayList<>(gameMap.values());
+        ArrayList<Game> result = new ArrayList<>();
+        for(Map.Entry<String, Game> entry: gameMap.entrySet()){
+            Game value = entry.getValue();
+            result.add(value);
+        }
+        return result;
+
     }
 
     /**
@@ -48,20 +53,37 @@ public class GameDAO {
      * @param id  is the id for game to be joined.
      * @throws DataAccessException if there's already a user of that color in that game
      */
-    public static void joinGame(String id, String playerColor) throws DataAccessException{
+    public static void joinGame(String id, String playerColor, String authToken) throws DataAccessException{
         //User joins game
-        Game g = gameMap.get(id);
-        if(Objects.equals(playerColor, "BLACK") && g.getBlackUsername() != null){
-            throw new DataAccessException("Black user taken");
-        } else if (Objects.equals(playerColor, "WHITE") && g.getWhiteUsername() != null){
-            throw new DataAccessException("White user taken");
-        } else if(Objects.equals(playerColor, "BLACK")){
-            g.setBlackUsername(id);
-        } else if(Objects.equals(playerColor, "WHITE")){
-            g.setWhiteUsername(id);
+        Integer token = Integer.parseInt(id);
+        if(AuthDAO.invalidToken(authToken)){
+            throw new DataAccessException("Error: unauthorized");
         }
-        else{
+        Game g = new Game(null);
+        g.setGameID(token);
+        boolean foundID = false;
+        for(Game game: gameMap.values()){
+            if(Objects.equals(game.getGameID(), g.getGameID())){
+                g = game;
+                foundID = true;
+                break;
+            }
+        }
+        if(!foundID){
+            throw new DataAccessException("Error: bad request");
+        }
+        String username = AuthDAO.getUsername(authToken);
+        if(playerColor == null){
             observeGame(g, id);
+        }
+        if(Objects.equals(playerColor, "BLACK") && g.getBlackUsername() != null){
+            throw new DataAccessException("Error: already taken");
+        } else if (Objects.equals(playerColor, "WHITE") && g.getWhiteUsername() != null){
+            throw new DataAccessException("Error: already taken");
+        } else if(Objects.equals(playerColor, "BLACK")){
+            g.setBlackUsername(username);
+        } else if(Objects.equals(playerColor, "WHITE")){
+            g.setWhiteUsername(username);
         }
     }
 
@@ -72,8 +94,8 @@ public class GameDAO {
      */
     public static void observeGame(Game game, String id) throws DataAccessException{
         //User observes Game
-        if(!gameMap.containsValue(game)){
-            throw new DataAccessException("Game not found");
+        if(!gameMap.containsKey(game.getGameName())){
+            throw new DataAccessException("Error: bad request");
         }
     }
 
@@ -84,7 +106,7 @@ public class GameDAO {
      */
     public void removeGame(Game game) throws DataAccessException{
         //Removes a singular game from map.
-        gameMap.remove(game.getGameID());
+        gameMap.remove(game.getGameName());
     }
 
     /**

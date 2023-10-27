@@ -1,5 +1,8 @@
 package services;
+import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
+import dataAccess.GameDAO;
+import models.User;
 import results.JoinGameResult;
 import requests.JoinGameRequest;
 /**
@@ -13,6 +16,16 @@ public class JoinGameService {
      * @return results
      */
     public JoinGameResult joinGame(JoinGameRequest request, String authToken) throws DataAccessException {
-        return request.joinGame(authToken);
+        String gamename = request.getGameID();
+        String playerColor = request.getPlayerColor();
+        JoinGameResult result = new JoinGameResult(null);
+        try {
+            GameDAO.joinGame(gamename, playerColor, authToken);
+            result.setGameID(gamename);
+            result.setPlayerColor(playerColor);
+        }catch(DataAccessException ex){
+            result.setMessage(ex.getMessage());
+        }
+        return result;
     }
 }

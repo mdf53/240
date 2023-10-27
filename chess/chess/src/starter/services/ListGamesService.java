@@ -1,5 +1,10 @@
 package services;
+import dataAccess.AuthDAO;
+import dataAccess.GameDAO;
+import dataAccess.DataAccessException;
 import results.ListGamesResults;
+import results.LogoutResult;
+
 /**
  * Service for List Games API
  */
@@ -9,8 +14,17 @@ public class ListGamesService {
      * @param authToken string for auth token from header
      * @return Results aka list of games
      */
-    public ListGamesResults listGames(String authToken){
+    public ListGamesResults listGames(String authToken) throws DataAccessException {
     //make a ListGamesResult for each game or just the game associated with the authToken?
-        return null;
+        ListGamesResults result = new ListGamesResults(null);
+        try {
+            if(AuthDAO.invalidToken(authToken)){
+                result.setMessage("Error: unauthorized");
+            }
+            result.setGameList(GameDAO.getAllGames());
+        } catch(DataAccessException ex){
+            result.setMessage(ex.getMessage());
+        }
+        return result;
     }
 }

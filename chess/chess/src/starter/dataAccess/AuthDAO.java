@@ -1,9 +1,6 @@
 package dataAccess;
 import models.Authtoken;
-import models.Game;
-import models.User;
 
-import javax.xml.crypto.Data;
 import java.util.*;
 
 /**
@@ -43,16 +40,19 @@ public class AuthDAO {
 
         return tokenList.get(username);
     }
+    public static String getUsername(String authToken){
+        for(String tokenString: tokenList.keySet()){
+            if(Objects.equals(tokenString, authToken)){
+                return tokenList.get(authToken).getUsername();
+            }
+        }
+        return "";
+    }
     /**
      *returns the list of all auth tokens
      * @return the tokenList
      * @throws DataAccessException if there aren't any tokens to return
      */
-    public List<Authtoken> getAllTokens() throws DataAccessException{
-//        return new ArrayList<>(tokenList);
-        //FIX ME
-        return null;
-    }
 
     public static void removeToken(String authToken) throws DataAccessException{
         if (tokenList.remove(authToken) == null) {
@@ -60,8 +60,8 @@ public class AuthDAO {
         }
     }
 
-    public static boolean validToken(String authToken){
-        return tokenList.containsKey(authToken);
+    public static boolean invalidToken(String authToken){
+        return !tokenList.containsKey(authToken);
     }
 
 

@@ -26,15 +26,6 @@ public class JoinGameRequest {
         playerColor = color;
         gameID = id;
     }
-    public JoinGameResult joinGame(String authToken) throws DataAccessException {
-
-        try {
-            GameDAO.joinGame(gameID, playerColor);
-        }catch(DataAccessException ex){
-            return new JoinGameResult("Unable to join game");
-        }
-        return new JoinGameResult(playerColor, gameID);
-    }
 
     public String getGameID(){
         return gameID;
