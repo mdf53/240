@@ -21,7 +21,6 @@ public class JoinGameHandler extends BaseHandler{
         //make new service object
         JoinGameRequest regRequest = gson.fromJson(request.body(), JoinGameRequest.class);
         JoinGameResult result = new JoinGameResult(null);
-        try{
             JoinGameService service = new JoinGameService();
             result = service.joinGame(regRequest, request.headers("Authorization"));
             if(result.getMessage() == null){
@@ -35,9 +34,6 @@ public class JoinGameHandler extends BaseHandler{
             } else{
                 response.status(500);
             }
-        } catch(DataAccessException ex){
-            response.status(400);
-        }
 
         return gson.toJson(result);
     }

@@ -18,7 +18,7 @@ public class LogoutHandler extends BaseHandler{
         //make new gson object
         Gson gson = new Gson();
         LogoutResult result = new LogoutResult(null);
-        try{
+
             LogoutService service = new LogoutService();
             result = service.logout(request.headers("Authorization"));
             if(result.getMessage() == null){
@@ -28,9 +28,7 @@ public class LogoutHandler extends BaseHandler{
             } else{
                 response.status(500);
             }
-        } catch(DataAccessException ex){
-            response.status(400);
-        }
+
 
         return gson.toJson(result);
     }

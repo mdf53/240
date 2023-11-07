@@ -19,7 +19,6 @@ public class CreateGameHandler extends BaseHandler{
 
         CreateGameRequest request = gson.fromJson(req.body(), CreateGameRequest.class);
         CreateGameResult result = new CreateGameResult();
-        try{
             CreateGameService service = new CreateGameService();
             result = service.createGame(request, req.headers("Authorization"));
             if(result.getMessage() == null){
@@ -29,9 +28,7 @@ public class CreateGameHandler extends BaseHandler{
             } else if (Objects.equals(result.getMessage(), "Error: unauthorized")){
                 res.status(401);
             }
-        } catch(DataAccessException exception){
-            res.status(400);
-        }
+
 
 
         return gson.toJson(result);

@@ -19,7 +19,6 @@ public class ListGameHandler extends BaseHandler{
         //make new gson object
         Gson gson = new Gson();
         ListGamesResults result = new ListGamesResults(null);
-        try{
             ListGamesService service = new ListGamesService();
             result = service.listGames(request.headers("Authorization"));
             if(result.getMessage() == null){
@@ -29,9 +28,7 @@ public class ListGameHandler extends BaseHandler{
             } else{
                 response.status(500);
             }
-        } catch(DataAccessException ex){
-            response.status(400);
-        }
+
 
         return gson.toJson(result);
     }}

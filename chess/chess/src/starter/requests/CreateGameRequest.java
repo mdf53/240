@@ -18,7 +18,7 @@ public class CreateGameRequest {
      * Constructor that initialzies name
      * @param name is gameName
      */
-    public CreateGameRequest(String name) throws DataAccessException {
+    public CreateGameRequest(String name) {
         gameName = name;
     }
 

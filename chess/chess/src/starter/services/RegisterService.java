@@ -14,7 +14,7 @@ public class RegisterService {
      * @param request for registration
      * @return results of registration
      */
-    public RegisterResults register(RegisterRequest request) throws DataAccessException {
+    public RegisterResults register(RegisterRequest request) {
             RegisterResults results = new RegisterResults(null);
             try {
                 User u = new User(request.getUsername(), request.getPassword(), request.getEmail());

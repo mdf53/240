@@ -14,7 +14,7 @@ public class LogoutService {
      * @param authToken user to logout
      * @return Results
      */
-    public LogoutResult logout(String authToken) throws DataAccessException {
+    public LogoutResult logout(String authToken){
         LogoutResult result = new LogoutResult();
         try {
             AuthDAO.removeToken(authToken);

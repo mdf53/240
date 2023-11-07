@@ -1,6 +1,8 @@
 package dataAccess;
 import models.Authtoken;
+import dataAccess.Database;
 
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -30,10 +32,28 @@ public class AuthDAO {
      * @throws DataAccessException if the token is already in list.
      */
     public static void insertAuth(Authtoken token) throws DataAccessException{
-        if(tokenList.containsKey(token.getAuthToken())){
-            throw new DataAccessException("Error");
+//        if(tokenList.containsKey(token.getAuthToken())){
+//            throw new DataAccessException("Error");
+//        }
+//        tokenList.put(token.getAuthToken(), token);
+
+        try (var preparedStatement = Database.getConnection().prepareStatement("INSERT INTO pet (name, type) VALUES(?, ?)")) {
+            preparedStatement.setString(1, token.getAuthToken());
+            preparedStatement.setString(2, token.getUsername());
+
+            preparedStatement.executeUpdate();
+
+//            var resultSet = preparedStatement.getGeneratedKeys();
+//            var ID = 0;
+//            if (resultSet.next()) {
+//                ID = resultSet.getInt(1);
+//            }
         }
-        tokenList.put(token.getAuthToken(), token);
+        catch(DataAccessException | SQLException ex){
+
+        }
+
+
     }
 
     public static Authtoken getAuthToken(String username){
@@ -55,9 +75,13 @@ public class AuthDAO {
      */
 
     public static void removeToken(String authToken) throws DataAccessException{
-        if (tokenList.remove(authToken) == null) {
-            throw new DataAccessException("Error: unauthorized");
+        for(Map.Entry<String, Authtoken> authtokenMap: tokenList.entrySet()){
+            if(Objects.equals(authtokenMap.getKey(), authToken)){
+                tokenList.remove(authtokenMap.getKey());
+                return;
+            }
         }
+        throw new DataAccessException("Error: unauthorized");
     }
 
     public static boolean invalidToken(String authToken){

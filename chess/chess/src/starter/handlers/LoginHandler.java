@@ -22,7 +22,7 @@ public class LoginHandler extends BaseHandler {
         //make new service object
         LoginRequest request = gson.fromJson(req.body(), LoginRequest.class);
         LoginResult result = new LoginResult(null);
-        try{
+
             LoginService service = new LoginService();
             result = service.login(request);
             if(result.getMessage() == null){
@@ -32,9 +32,7 @@ public class LoginHandler extends BaseHandler {
             } else{
                 response.status(500);
             }
-        } catch(DataAccessException ex){
-            response.status(400);
-        }
+
 
         return gson.toJson(result);
     }

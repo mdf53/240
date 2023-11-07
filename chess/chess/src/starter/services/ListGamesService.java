@@ -14,7 +14,7 @@ public class ListGamesService {
      * @param authToken string for auth token from header
      * @return Results aka list of games
      */
-    public ListGamesResults listGames(String authToken) throws DataAccessException {
+    public ListGamesResults listGames(String authToken) {
     //make a ListGamesResult for each game or just the game associated with the authToken?
         ListGamesResults result = new ListGamesResults(null);
         try {

@@ -19,7 +19,7 @@ public class LoginService {
      * @param request login request
      * @return login results
      */
-    public LoginResult login(LoginRequest request) throws DataAccessException{
+    public LoginResult login(LoginRequest request){
 //
 //        if(UserDAO.loginRequest(request.getUsername(), request.getPassword())){
 //            return new LoginResult(request.getUsername(), request.getPassword());

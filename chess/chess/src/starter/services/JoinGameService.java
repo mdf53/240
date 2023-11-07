@@ -15,7 +15,7 @@ public class JoinGameService {
      * @param authToken from header
      * @return results
      */
-    public JoinGameResult joinGame(JoinGameRequest request, String authToken) throws DataAccessException {
+    public JoinGameResult joinGame(JoinGameRequest request, String authToken) {
         String gamename = request.getGameID();
         String playerColor = request.getPlayerColor();
         JoinGameResult result = new JoinGameResult(null);

@@ -19,7 +19,7 @@ public class RegisterHandler extends BaseHandler{
         //make new service object
         RegisterRequest regRequest = gson.fromJson(request.body(), RegisterRequest.class);
         RegisterResults result = new RegisterResults(null);
-        try{
+
             RegisterService service = new RegisterService();
             result = service.register(regRequest);
             if(result.getMessage() == null){
@@ -31,9 +31,7 @@ public class RegisterHandler extends BaseHandler{
             } else{
                 response.status(500);
             }
-        } catch(DataAccessException ex){
-            response.status(400);
-        }
+
 
         return gson.toJson(result);
     }

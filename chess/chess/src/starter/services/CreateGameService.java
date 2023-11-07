@@ -16,7 +16,7 @@ public class CreateGameService {
      * @param authToken is the header token
      * @return the result
      */
-    public CreateGameResult createGame(CreateGameRequest request, String authToken) throws DataAccessException{
+    public CreateGameResult createGame(CreateGameRequest request, String authToken){
 
         CreateGameResult result = new CreateGameResult();
         try {

@@ -32,6 +32,7 @@ public class CreateGameResult {
     public String getMessage(){
         return message;
     }
+    public Integer getGameID() {return gameID;}
 
     public void setMessage(String message) {
         this.message = message;
