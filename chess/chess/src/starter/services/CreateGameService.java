@@ -6,6 +6,8 @@ import models.Game;
 import requests.CreateGameRequest;
 import results.CreateGameResult;
 
+import java.sql.SQLException;
+
 /**
  * Service for Create Game API
  */
@@ -27,6 +29,8 @@ public class CreateGameService {
         }
         catch(DataAccessException exception){
             result.setMessage(exception.getMessage());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         return result;
     }

@@ -1,11 +1,11 @@
-DROP DATABASE IF EXISTS ChessDatabase;
+DROP SCHEMA IF EXISTS chess;
 
-CREATE DATABASE ChessDatabase;
+CREATE SCHEMA chess;
 
-USE ChessDatabase;
+USE chess;
 
 
-CREATE TABLE  IF NOT EXISTS game (
+CREATE TABLE  IF NOT EXISTS games (
     id INT NOT NULL,
     whiteUsername VARCHAR(255),
     blackUsername VARCHAR(255),

@@ -3,10 +3,12 @@ import models.Authtoken;
 import dataAccess.Database;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
 
 import static dataAccess.Database.getConnection;
+import static java.sql.DriverManager.getConnection;
 
 /**
  * Manages Authentication Tokens
@@ -25,8 +27,18 @@ public class AuthDAO {
      * clears the tokenList
      * @throws DataAccessException if list is already empty
      */
-    public static void clear(){
-        tokenList.clear();
+    public static void clear() throws DataAccessException {
+
+        Connection con = Database.getConnection();
+        try (var preparedStatement = con.prepareStatement("DELETE FROM authTokens ;")) {
+
+            preparedStatement.executeUpdate();
+            Database.closeConnection(con);
+        }
+        catch(SQLException ex){
+            throw new DataAccessException("Error: " + ex.getMessage());
+        }
+
     }
 
     /**
@@ -35,17 +47,14 @@ public class AuthDAO {
      * @throws DataAccessException if the token is already in list.
      */
     public static void insertAuth(Authtoken token) throws DataAccessException{
-//        if(tokenList.containsKey(token.getAuthToken())){
-//            throw new DataAccessException("Error");
-//        }
-//        tokenList.put(token.getAuthToken(), token);
-        Connection con = getConnection();
+
+        Connection con = Database.getConnection();
         try (var preparedStatement = con.prepareStatement("INSERT INTO authTokens (token, username) VALUES(?, ?)")) {
             preparedStatement.setString(1, token.getAuthToken());
             preparedStatement.setString(2, token.getUsername());
 
             preparedStatement.executeUpdate();
-            con.close();
+            Database.closeConnection(con);
 
         }
         catch(SQLException ex){
@@ -70,17 +79,42 @@ public class AuthDAO {
      */
 
     public static void removeToken(String authToken) throws DataAccessException{
-        for(Map.Entry<String, Authtoken> authtokenMap: tokenList.entrySet()){
-            if(Objects.equals(authtokenMap.getKey(), authToken)){
-                tokenList.remove(authtokenMap.getKey());
-                return;
-            }
+//        for(Map.Entry<String, Authtoken> authtokenMap: tokenList.entrySet()){
+//            if(Objects.equals(authtokenMap.getKey(), authToken)){
+//                tokenList.remove(authtokenMap.getKey());
+//                return;
+//            }
+//        }
+        Connection con = getConnection();
+        try(PreparedStatement prep = con.prepareStatement("DELETE FROM authTokens WHERE token = ?")){
+            prep.setString(1, authToken);
+            prep.executeUpdate();
+            con.close();
+        } catch (SQLException e) {
+            throw new DataAccessException("Error: " + e.getMessage());
         }
-        throw new DataAccessException("Error: unauthorized");
+
+
+//        throw new DataAccessException("Error: unauthorized");
     }
 
-    public static boolean invalidToken(String authToken){
-        return !tokenList.containsKey(authToken);
+    public static boolean invalidToken(String authToken) throws DataAccessException, SQLException {
+        Connection conn = Database.getConnection();
+        try (var preparedStatement = conn.prepareStatement("SELECT * FROM authTokens WHERE token=?")) {
+            preparedStatement.setString(1, authToken);
+            try (var rs = preparedStatement.executeQuery()) {
+                while (rs.next()) {
+                    String id = rs.getString("token");
+                    if(id.equals(authToken)){
+                        return true;
+                    }
+                }
+            }
+        } catch(SQLException e){
+            throw new DataAccessException("Error: " + e.getMessage());
+        }
+        return false;
+//        return !tokenList.containsKey(authToken);
     }
 
 

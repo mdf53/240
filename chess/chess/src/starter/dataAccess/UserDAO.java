@@ -26,6 +26,7 @@ public class UserDAO {
      * @throws DataAccessException if map is empty
      */
     public static void clear() {
+
         userMap.clear();
     }
 

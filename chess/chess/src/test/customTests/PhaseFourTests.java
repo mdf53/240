@@ -6,6 +6,8 @@ import dataAccess.DataAccessException;
 import org.junit.jupiter.api.*;
 import services.ClearService;
 
+import java.sql.SQLException;
+
 public class PhaseFourTests {
 
     @Test
@@ -15,44 +17,83 @@ public class PhaseFourTests {
         try{
             AuthDAO.insertAuth(t);
         }catch(DataAccessException e){
-            Assertions.assertEquals("a","a");
+            Assertions.assertNull(e.getMessage());
         }
     }
 
     @Test
     @DisplayName("Fail To Add AuthToken to Database")
     public void AddToAuthDataFail(){
-
+        Authtoken t = new Authtoken(null, "69");
+        try{
+            AuthDAO.insertAuth(t);
+        }catch(DataAccessException e){
+            Assertions.assertNotNull(e.getMessage());
+        }
     }
 
     @Test
     @DisplayName("Clear the AuthToken Database")
     public void ClearAuthData(){
-
+        try{
+            AuthDAO.clear();
+        }catch(DataAccessException e){
+            Assertions.assertNull(e.getMessage());
+        }
     }
 
     @Test
     @DisplayName("Successfully Remove a Token From the AuthToken Database")
     public void RemoveAuthData(){
+        Authtoken t = new Authtoken("Jimbo", "69");
 
+        try{
+            AuthDAO.insertAuth(t);
+            AuthDAO.removeToken("69");
+        } catch(DataAccessException e){
+            Assertions.assertNull(e.getMessage());
+        }
     }
 
     @Test
     @DisplayName("Fail To Remove a Token From the AuthToken Database")
     public void RemoveAuthDataFail(){
+        Authtoken t = new Authtoken("Jimbo", "69");
 
+        try{
+            AuthDAO.insertAuth(t);
+            AuthDAO.removeToken("9999");
+        } catch(DataAccessException e){
+            Assertions.assertNotNull(e.getMessage());
+        }
     }
 
     @Test
     @DisplayName("Successfully Validate Token")
-    public void ValidateToken(){
+    public void ValidateToken() {
+        Authtoken t = new Authtoken("Jimbo", "30");
+        try {
+            AuthDAO.insertAuth(t);
+            boolean check = AuthDAO.invalidToken("30");
+            Assertions.assertTrue(check);
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (DataAccessException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Test
     @DisplayName("Fail To Validate Token")
     public void ValidateTokenFail(){
+        try{
+            boolean check = AuthDAO.invalidToken("30000000");
+            Assertions.assertFalse(check);
 
+        } catch (SQLException | DataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

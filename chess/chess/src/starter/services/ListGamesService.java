@@ -5,6 +5,8 @@ import dataAccess.DataAccessException;
 import results.ListGamesResults;
 import results.LogoutResult;
 
+import java.sql.SQLException;
+
 /**
  * Service for List Games API
  */
@@ -22,7 +24,7 @@ public class ListGamesService {
                 result.setMessage("Error: unauthorized");
             }
             result.setGameList(GameDAO.getAllGames());
-        } catch(DataAccessException ex){
+        } catch(DataAccessException | SQLException ex){
             result.setMessage(ex.getMessage());
         }
         return result;

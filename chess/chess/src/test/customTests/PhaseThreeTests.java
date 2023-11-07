@@ -1,4 +1,5 @@
 package customTests;
+import dataAccess.DataAccessException;
 import models.*;
 import org.junit.jupiter.api.*;
 import requests.*;
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class PhaseThreeTests {
 
     @BeforeEach
-    public void setup(){
+    public void setup() throws DataAccessException {
         ClearService service = new ClearService();
         service.clear();
     }
@@ -218,7 +219,7 @@ public class PhaseThreeTests {
     @Test
     @Order(8)
     @DisplayName("Successful Clear")
-    public void clear(){
+    public void clear() throws DataAccessException {
         ClearService service = new ClearService();
         ClearResult result = service.clear();
         assertNull(result.getMessage());

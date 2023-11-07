@@ -9,7 +9,7 @@ public class ClearService {
     /**
      * Clears all the DAOs
      */
-    public ClearResult clear(){
+    public ClearResult clear() throws DataAccessException {
         AuthDAO.clear();
         GameDAO.clear();
         UserDAO.clear();

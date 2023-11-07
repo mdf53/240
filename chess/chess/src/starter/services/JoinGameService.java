@@ -5,6 +5,9 @@ import dataAccess.GameDAO;
 import models.User;
 import results.JoinGameResult;
 import requests.JoinGameRequest;
+
+import java.sql.SQLException;
+
 /**
  * Service for Join Game API
  */
@@ -23,7 +26,7 @@ public class JoinGameService {
             GameDAO.joinGame(gamename, playerColor, authToken);
             result.setGameID(gamename);
             result.setPlayerColor(playerColor);
-        }catch(DataAccessException ex){
+        }catch(DataAccessException | SQLException ex){
             result.setMessage(ex.getMessage());
         }
         return result;

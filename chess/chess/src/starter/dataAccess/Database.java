@@ -11,13 +11,11 @@ import java.sql.SQLException;
 public class Database {
 
     // FIXME: Change these fields, if necessary, to match your database configuration
-    public static final String DB_NAME = "ChessDatabase";
+    public static final String DB_NAME = "chess";
     private static final String DB_USERNAME = "root";
     private static final String DB_PASSWORD = "KunakiD123";
 
     private static final String CONNECTION_URL = "jdbc:mysql://localhost:3306/" + DB_NAME;
-
-    protected static Connection connection;
 
     /**
      * Gets a connection to the database.
@@ -27,11 +25,7 @@ public class Database {
      */
     public static Connection getConnection() throws DataAccessException {
         try {
-            if(connection == null) {
-                connection = DriverManager.getConnection(CONNECTION_URL, DB_USERNAME, DB_PASSWORD);
-                connection.setAutoCommit(false);
-            }
-            return connection;
+            return DriverManager.getConnection(CONNECTION_URL, DB_USERNAME, DB_PASSWORD);
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
         }
@@ -43,7 +37,7 @@ public class Database {
      * @param connection the connection to be closed.
      * @throws DataAccessException if a data access error occurs while closing the connection.
      */
-    public void closeConnection(Connection connection) throws DataAccessException {
+    public static void closeConnection(Connection connection) throws DataAccessException {
         if(connection != null) {
             try {
                 connection.close();

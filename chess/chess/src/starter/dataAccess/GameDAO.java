@@ -1,6 +1,7 @@
 package dataAccess;
 import models.Game;
 
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -21,7 +22,7 @@ public class GameDAO {
      * @param g is the game being created (added to game map).
      * @throws DataAccessException if the game already exists
      */
-    public static void createGame(Game g, String authToken) throws DataAccessException{
+    public static void createGame(Game g, String authToken) throws DataAccessException, SQLException {
         //add a new game to the map
         if(AuthDAO.invalidToken(authToken)){
             throw new DataAccessException("Error: unauthorized");
@@ -53,7 +54,7 @@ public class GameDAO {
      * @param id  is the id for game to be joined.
      * @throws DataAccessException if there's already a user of that color in that game
      */
-    public static void joinGame(String id, String playerColor, String authToken) throws DataAccessException{
+    public static void joinGame(String id, String playerColor, String authToken) throws DataAccessException, SQLException {
         //User joins game
         Integer token = Integer.parseInt(id);
         if(AuthDAO.invalidToken(authToken)){
