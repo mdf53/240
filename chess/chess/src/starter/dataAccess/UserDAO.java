@@ -28,13 +28,7 @@ public class UserDAO {
     public static void clear() {
         userMap.clear();
     }
-    public static boolean loginRequest(String username, String password){
-        if(userMap.containsKey(username)){
-            User u = userMap.get(username);
-            return Objects.equals(u.getPassword(), password);
-        }
-        return false;
-    }
+
     /**
      * checks to see if user is in map
      * @param user that is being checked

@@ -2,8 +2,11 @@ package dataAccess;
 import models.Authtoken;
 import dataAccess.Database;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
+
+import static dataAccess.Database.getConnection;
 
 /**
  * Manages Authentication Tokens
@@ -36,30 +39,22 @@ public class AuthDAO {
 //            throw new DataAccessException("Error");
 //        }
 //        tokenList.put(token.getAuthToken(), token);
-
-        try (var preparedStatement = Database.getConnection().prepareStatement("INSERT INTO pet (name, type) VALUES(?, ?)")) {
+        Connection con = getConnection();
+        try (var preparedStatement = con.prepareStatement("INSERT INTO authTokens (token, username) VALUES(?, ?)")) {
             preparedStatement.setString(1, token.getAuthToken());
             preparedStatement.setString(2, token.getUsername());
 
             preparedStatement.executeUpdate();
+            con.close();
 
-//            var resultSet = preparedStatement.getGeneratedKeys();
-//            var ID = 0;
-//            if (resultSet.next()) {
-//                ID = resultSet.getInt(1);
-//            }
         }
-        catch(DataAccessException | SQLException ex){
-
+        catch(SQLException ex){
+            throw new DataAccessException("Error: " + ex.getMessage());
         }
 
 
     }
 
-    public static Authtoken getAuthToken(String username){
-
-        return tokenList.get(username);
-    }
     public static String getUsername(String authToken){
         for(String tokenString: tokenList.keySet()){
             if(Objects.equals(tokenString, authToken)){

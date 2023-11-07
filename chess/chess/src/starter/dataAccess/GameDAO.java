@@ -92,7 +92,7 @@ public class GameDAO {
      * @param game is the game to be observed
      * @throws DataAccessException if game doesn't exist
      */
-    public static void observeGame(Game game, String id) throws DataAccessException{
+    private static void observeGame(Game game, String id) throws DataAccessException{
         //User observes Game
         if(!gameMap.containsKey(game.getGameName())){
             throw new DataAccessException("Error: bad request");
