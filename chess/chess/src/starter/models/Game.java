@@ -29,7 +29,7 @@ public class Game {
 
     private ChessGame game;
 
-    public Game(String gameName, String whiteU, String blackU, String authToken, String game) {
+    public Game(String gameName, String whiteU, String blackU, int authToken, String game) {
         this.gameName = gameName;
         whiteUsername = whiteU;
         blackUsername = blackU;
@@ -74,5 +74,9 @@ public String getGameName(){
 
     public String serialize() {
         return game.serialize();
+    }
+
+    public void setGameName(String id) {
+        gameName = id;
     }
 }

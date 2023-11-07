@@ -22,7 +22,16 @@ public class JoinGameService {
         String gamename = request.getGameID();
         String playerColor = request.getPlayerColor();
         JoinGameResult result = new JoinGameResult(null);
+
         try {
+            if (!AuthDAO.invalidToken(authToken)){
+                result.setMessage("Error: unauthorized");
+                return result;
+            }
+//            else if(!GameDAO.gameExists(gamename)){
+//                result.setMessage("Error: bad request");
+//                return result;
+//            }
             GameDAO.joinGame(gamename, playerColor, authToken);
             result.setGameID(gamename);
             result.setPlayerColor(playerColor);

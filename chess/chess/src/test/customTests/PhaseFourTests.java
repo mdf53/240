@@ -178,8 +178,10 @@ public class PhaseFourTests {
     @DisplayName("Successfully Add Game to Database")
     public void AddGameSuccess(){
         try {
+            User u = new User("jo","pass","mail");
+            Authtoken t = UserDAO.addNewUser(u);
             Game g = new Game("ILostTheGame");
-            GameDAO.createGame(g, "12345");
+            GameDAO.createGame(g, t.getAuthToken());
         } catch (SQLException | DataAccessException e) {
             Assertions.assertNull(e.getMessage());
         }
@@ -189,9 +191,11 @@ public class PhaseFourTests {
     @DisplayName("Fail To Add Game to Database")
     public void AddGameFail(){
         try {
+            User u = new User("jo","pass","mail");
+            Authtoken t = UserDAO.addNewUser(u);
             Game g = new Game("ILostTheGame");
-            GameDAO.createGame(g, "12345");
-            GameDAO.createGame(g, "12345");
+            GameDAO.createGame(g, t.getAuthToken());
+            GameDAO.createGame(g, t.getAuthToken());
         } catch (SQLException | DataAccessException e) {
             Assertions.assertEquals("Error: Game Already Exists",e.getMessage());
         }
@@ -212,10 +216,12 @@ public class PhaseFourTests {
     @DisplayName("Successfully List All Games")
     public void ListGame(){
         try {
+            User u = new User("jo","pass","mail");
+            Authtoken t = UserDAO.addNewUser(u);
             Game g = new Game("ILostTheGame");
             Game a = new Game("Howdy");
-            GameDAO.createGame(g, "12395");
-            GameDAO.createGame(a, "09876");
+            GameDAO.createGame(g, t.getAuthToken());
+            GameDAO.createGame(a, t.getAuthToken());
             ArrayList<Game> games = GameDAO.getAllGames();
             int size = games.size();
             Assertions.assertEquals(2, size);
@@ -243,11 +249,11 @@ public class PhaseFourTests {
     @DisplayName("Successfully Join A Games")
     public void JoinGame(){
         try {
-            Game g = new Game("Hola");
-            GameDAO.createGame(g, "125");
-            User u = new User("name", "pass", "mail");
-            Authtoken token = UserDAO.addNewUser(u);
-            GameDAO.joinGame("125", "WHITE", token.getAuthToken());
+            User u = new User("jo","pass","mail");
+            Authtoken t = UserDAO.addNewUser(u);
+            Game g = new Game("1234");
+            GameDAO.createGame(g, t.getAuthToken());
+            GameDAO.joinGame(g.getGameName(), "WHITE", t.getAuthToken());
         } catch (SQLException | DataAccessException e) {
             Assertions.assertNull(e);
         }

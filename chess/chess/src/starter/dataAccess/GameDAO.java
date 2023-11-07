@@ -21,14 +21,15 @@ public class GameDAO {
      * @param g is the game being created (added to game map).
      * @throws DataAccessException if the game already exists
      */
-    public static void createGame(Game g, String authToken) throws DataAccessException, SQLException {
+    public static void createGame(Game g, String userAuthToken) throws DataAccessException, SQLException {
         //add a new game to the map
+        int gameID = g.getGameID();
         String whiteUsername = g.getWhiteUsername();
         String blackUsername = g.getBlackUsername();
         String name = g.getGameName();
         String game = g.serialize();
 
-        if(!AuthDAO.invalidToken(authToken)){
+        if(!AuthDAO.invalidToken(userAuthToken)){
             throw new DataAccessException("Error: unauthorized");
         }
         if(gameExists(name)){
@@ -36,7 +37,7 @@ public class GameDAO {
         }
         Connection con = Database.getConnection();
         try (var preparedStatement = con.prepareStatement("INSERT INTO games (id, whiteUsername, blackUsername, gameName, game) VALUES(?, ?, ?, ?, ?)")) {
-            preparedStatement.setString(1, authToken);
+            preparedStatement.setInt(1, gameID);
             preparedStatement.setString(2, whiteUsername);
             preparedStatement.setString(3, blackUsername);
             preparedStatement.setString(4, name);
@@ -51,7 +52,7 @@ public class GameDAO {
         }
     }
 
-    private static boolean gameExists(String gameName) throws DataAccessException {
+    public static boolean gameExists(String gameName) throws DataAccessException {
         Connection conn = Database.getConnection();
         try (var preparedStatement = conn.prepareStatement("SELECT * FROM games WHERE gameName=?")) {
             preparedStatement.setString(1, gameName);
@@ -76,22 +77,18 @@ public class GameDAO {
      */
     public static ArrayList<Game> getAllGames() throws DataAccessException{
         //return all the games in the map.
-        String gameName;
-        String whiteU;
-        String blackU;
-        String authToken;
-        String game;
+
         ArrayList<Game> result = new ArrayList<>();
         Connection con = Database.getConnection();
         try (var preparedStatement = con.prepareStatement("SELECT * FROM games")) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
-                gameName = resultSet.getString("gameName");
-                whiteU = resultSet.getString("whiteUsername");
-                blackU = resultSet.getString("blackUsername");
-                authToken = resultSet.getString("id");
-                game = resultSet.getString("game");
-                result.add(new Game(gameName, whiteU, blackU, authToken, game));
+                String gameName = resultSet.getString("gameName");
+                String whiteU = resultSet.getString("whiteUsername");
+                String blackU = resultSet.getString("blackUsername");
+                int gameID = resultSet.getInt("id");
+                String game = resultSet.getString("game");
+                result.add(new Game(gameName, whiteU, blackU, gameID, game));
             }
             Database.closeConnection(con);
         }
@@ -104,27 +101,27 @@ public class GameDAO {
 
     /**
      * allows a player to join a game
-     * @param id  is the id for game to be joined.
+     * @param name  is the name for game to be joined.
      * @throws DataAccessException if there's already a user of that color in that game
      */
-    public static void joinGame(String id, String playerColor, String authToken) throws DataAccessException, SQLException {
+    public static void joinGame(String name, String playerColor, String authToken) throws DataAccessException, SQLException {
+
+        if(playerColor == null) return;
+
         //User joins game
-        Integer token = Integer.parseInt(id);
-        if(!AuthDAO.invalidToken(authToken)){
-            throw new DataAccessException("Error: unauthorized");
-        }
+
         Game g = new Game(null);
-        g.setGameID(token);
+        g.setGameName(name);
         boolean foundID = false;
         ArrayList<Game> gameList = getAllGames();
         for(Game game: gameList){
-            if(Objects.equals(game.getGameID(), g.getGameID())){
+            if(Objects.equals(game.getGameName(), g.getGameName())){
                 g = game;
-                if(Objects.equals(playerColor, "WHITE") && game.getWhiteUsername() != null){
-                    throw new DataAccessException("Error: bad request");
+                if(Objects.equals(playerColor, "WHITE") && g.getWhiteUsername() != null){
+                    throw new DataAccessException("Error: already taken");
                 }
-                if(Objects.equals(playerColor, "BLACK") && game.getBlackUsername() != null){
-                    throw new DataAccessException("Error: bad request");
+                if(Objects.equals(playerColor, "BLACK") && g.getBlackUsername() != null){
+                    throw new DataAccessException("Error: already taken");
                 }
                 foundID = true;
                 break;
@@ -137,36 +134,18 @@ public class GameDAO {
         String username = AuthDAO.getUsername(authToken);
         String userToUpdate = (Objects.equals(playerColor, "WHITE")) ? "whiteUsername" : "blackUsername";
         Connection con = Database.getConnection();
-        try (var preparedStatement = con.prepareStatement("UPDATE game SET" + userToUpdate + " = ? WHERE gameID = ?")){
+        try (var preparedStatement = con.prepareStatement("UPDATE games SET " + userToUpdate + " = ? WHERE id = ?")){
             preparedStatement.setString(1, username);
-            preparedStatement.setString(2, String.valueOf(g.getGameID()));
+            preparedStatement.setInt(2, g.getGameID());
             preparedStatement.executeUpdate();
             con.close();
-        }catch(SQLException e){
-            throw new DataAccessException("Error: " + e.getMessage());
         }
-//        if(Objects.equals(playerColor, "BLACK") && g.getBlackUsername() != null){
-//            throw new DataAccessException("Error: already taken");
-//        } else if (Objects.equals(playerColor, "WHITE") && g.getWhiteUsername() != null){
-//            throw new DataAccessException("Error: already taken");
-//        } else if(Objects.equals(playerColor, "BLACK")){
-//            g.setBlackUsername(username);
-//        } else if(Objects.equals(playerColor, "WHITE")){
-//            g.setWhiteUsername(username);
+//        catch(SQLException e){
+//            throw new DataAccessException("Error: " + e.getMessage());
 //        }
 
     }
 
-
-//    /**
-//     * removes a game from the map
-//     * @param game is the game to be removed
-//     * @throws DataAccessException when the game doesn't exist
-//     */
-//    public void removeGame(Game game) throws DataAccessException{
-//        //Removes a singular game from map.
-//        gameMap.remove(game.getGameName());
-//    }
 
     /**
      * Clears the gameMap
