@@ -3,6 +3,8 @@ package models;
 import java.util.UUID;
 
 import static java.lang.Math.abs;
+import chess.ChessGame;
+import chess.MyChessGame;
 
 /**
  * Game object.
@@ -25,20 +27,29 @@ public class Game {
      */
     private String gameName;
 
+    private ChessGame game;
+
+    public Game(String gameName, String whiteU, String blackU, String authToken, String game) {
+        this.gameName = gameName;
+        whiteUsername = whiteU;
+        blackUsername = blackU;
+        gameID = Integer.valueOf(authToken);
+        //figure out game
+    }
+
 
     public void setGameID(Integer gameID) {
         this.gameID = gameID;
     }
 
-    public void setGameName(String gameName) {
-        this.gameName = gameName;
-    }
 
     public Game(String name){
         gameID = abs(UUID.randomUUID().hashCode());
         whiteUsername = null;
         blackUsername = null;
         gameName = name;
+        game = new MyChessGame("set");
+
     }
 
 public Integer getGameID(){
@@ -61,5 +72,7 @@ public String getGameName(){
 }
 
 
-
+    public String serialize() {
+        return game.serialize();
+    }
 }

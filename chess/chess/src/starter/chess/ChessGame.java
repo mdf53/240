@@ -79,6 +79,8 @@ public interface ChessGame {
      */
     void setBoard(ChessBoard board);
 
+    public String serialize();
+
     /**
      * Gets the current chessboard
      * 

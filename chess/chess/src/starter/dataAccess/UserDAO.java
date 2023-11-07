@@ -99,7 +99,7 @@ public class UserDAO {
         String password = null;
         String email = null;
         Connection conn = Database.getConnection();
-        try (var preparedStatement = conn.prepareStatement("SELECT * FROM authTokens WHERE token=?")) {
+        try (var preparedStatement = conn.prepareStatement("SELECT * FROM users WHERE username=?")) {
             preparedStatement.setString(1, name);
             try (var rs = preparedStatement.executeQuery()) {
                 while (rs.next()) {

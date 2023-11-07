@@ -7,6 +7,33 @@ public abstract class MyChessPiece implements chess.ChessPiece {
     PieceType type;
     ChessPosition position;
 
+    @Override
+    public String serialize() {
+        StringBuilder sb = new StringBuilder();
+        if(this.getTeamColor() == ChessGame.TeamColor.WHITE){
+            sb.append("w");
+        }else{
+            sb.append("b");
+        }
+        if (this.getPieceType() == PieceType.PAWN) {
+            sb.append("P,");
+        } else if (this.getPieceType() == PieceType.ROOK) {
+            sb.append("R,");
+        }else if (this.getPieceType() == PieceType.BISHOP) {
+            sb.append("B,");
+        }
+        else if (this.getPieceType() == PieceType.KNIGHT) {
+            sb.append("N,");
+        }else if (this.getPieceType() == PieceType.KING) {
+            sb.append("K,");
+        }else if (this.getPieceType() == PieceType.QUEEN) {
+            sb.append("Q,");
+        }
+
+        return sb.toString();
+    }
+
+
     MyChessPiece(ChessGame.TeamColor color, ChessPosition position){
         this.color = color;
         //this.type = type;
@@ -87,18 +114,18 @@ public abstract class MyChessPiece implements chess.ChessPiece {
             sb.append("(b)");
         }
         if (this.getPieceType() == PieceType.PAWN) {
-            sb.append("P");
+            sb.append("P,");
         } else if (this.getPieceType() == PieceType.ROOK) {
-            sb.append("R");
+            sb.append("R,");
         }else if (this.getPieceType() == PieceType.BISHOP) {
-            sb.append("B");
+            sb.append("B,");
         }
         else if (this.getPieceType() == PieceType.KNIGHT) {
-            sb.append("N");
+            sb.append("N,");
         }else if (this.getPieceType() == PieceType.KING) {
-            sb.append("K");
+            sb.append("K,");
         }else if (this.getPieceType() == PieceType.QUEEN) {
-            sb.append("Q");
+            sb.append("Q,");
         }
 
         return sb.toString();

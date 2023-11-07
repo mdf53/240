@@ -4,6 +4,8 @@ import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
 import results.LogoutResult;
 
+import java.sql.SQLException;
+
 /**
  * Service for Logout API
  */
@@ -18,7 +20,7 @@ public class LogoutService {
         LogoutResult result = new LogoutResult();
         try {
             AuthDAO.removeToken(authToken);
-        } catch(DataAccessException ex){
+        } catch(DataAccessException | SQLException ex){
             result.setMessage(ex.getMessage());
         }
         return result;

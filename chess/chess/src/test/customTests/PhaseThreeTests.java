@@ -61,7 +61,7 @@ public class PhaseThreeTests {
 
         RegisterResults result = registerNewUser();
 
-        assertEquals(result.getMessage(), "Error: already taken");
+        assertEquals("Error: already taken",result.getMessage());
     }
 
     //Test login
@@ -76,7 +76,7 @@ public class PhaseThreeTests {
         LoginResult result = loginUser();
 
         //first is expecting, second is passing, third is what it returns if it fails
-        assertNull(result.getMessage(), result.getMessage());
+        assertNull(result.getMessage());
         assertEquals(result.getUsername(), "John", "Error: bad request");
         assertNotNull(result.getAuthToken(), "Error: unauthorized");
     }
@@ -114,12 +114,12 @@ public class PhaseThreeTests {
     public void failedLogout(){
         RegisterResults result = registerNewUser();
 
-        LoginRequest req1 = new LoginRequest("Jim", "Pass");
+        LoginRequest req1 = new LoginRequest("John", "Pass");
         LoginService ser1 = new LoginService();
         LoginResult res1 = ser1.login(req1);
 
         LogoutService service = new LogoutService();
-        LogoutResult resu = service.logout(res1.getAuthToken());
+        LogoutResult resu = service.logout("12345");
 
         //first is expecting, second is passing, third is what it returns if it fails
         assertEquals("Error: unauthorized", resu.getMessage());

@@ -6,11 +6,11 @@ USE chess;
 
 
 CREATE TABLE  IF NOT EXISTS games (
-    id INT NOT NULL,
+    id VARCHAR(255) NOT NULL,
     whiteUsername VARCHAR(255),
     blackUsername VARCHAR(255),
     gameName VARCHAR(255) NOT NULL,
-    game VARCHAR(255) NOT NULL,
+    game text NOT NULL,
     PRIMARY KEY (id)
 );
 

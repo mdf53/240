@@ -112,6 +112,20 @@ public class MyChessBoard implements chess.ChessBoard {
         }
     }
 
+    @Override
+    public String serialize() {
+        StringBuilder sb = new StringBuilder();
+        for(int c = cols - 1; c >= 0; c--){
+            for(int r = 0; r < rows; r++){
+                if(board[r][c] != null) {
+                    sb.append(board[r][c].serialize());
+                } else{
+                    sb.append("_,");
+                }
+            }
+        }
+        return sb.toString();    }
+
     public void clearBoard(){
         for(int r = 0; r < rows; r++){
             for(int c = 0; c < cols; c++){

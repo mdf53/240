@@ -12,6 +12,11 @@ public class MyChessGame implements chess.ChessGame {
         whoseTurn = TeamColor.WHITE;
         board = new MyChessBoard();
     }
+    public MyChessGame(String s){
+        whoseTurn = TeamColor.WHITE;
+        board = new MyChessBoard();
+        board.resetBoard();
+    }
     /**
      * @return Which team's turn it is
      */
@@ -20,12 +25,17 @@ public class MyChessGame implements chess.ChessGame {
         return whoseTurn;
     }
 
+
+
+    @Override
+    public String serialize(){
+        return board.serialize();
+    }
     /**
      * Set's which teams turn it is
      *
      * @param team the team whose turn it is
      */
-
     @Override
     public void setTeamTurn(TeamColor team) {
         if(team == TeamColor.WHITE){

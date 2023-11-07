@@ -70,14 +70,19 @@ public class AuthDAO {
      * @throws DataAccessException if there aren't any tokens to return
      */
 
-    public static void removeToken(String authToken) throws DataAccessException{
-        Connection con = getConnection();
-        try(PreparedStatement prep = con.prepareStatement("DELETE FROM authTokens WHERE token = ?")){
-            prep.setString(1, authToken);
-            prep.executeUpdate();
-            con.close();
-        } catch (SQLException e) {
-            throw new DataAccessException("Error: " + e.getMessage());
+    public static void removeToken(String authToken) throws DataAccessException, SQLException {
+        if(invalidToken(authToken)) {
+            Connection con = getConnection();
+            try (PreparedStatement prep = con.prepareStatement("DELETE FROM authTokens WHERE token = ?")) {
+                prep.setString(1, authToken);
+                prep.executeUpdate();
+                con.close();
+            } catch (SQLException e) {
+                throw new DataAccessException("Error: " + e.getMessage());
+            }
+        }
+        else{
+            throw new DataAccessException("Error: unauthorized");
         }
     }
 

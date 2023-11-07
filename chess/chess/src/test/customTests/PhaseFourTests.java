@@ -1,14 +1,24 @@
 package customTests;
 
+import dataAccess.GameDAO;
 import dataAccess.UserDAO;
 import models.*;
 import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
 import org.junit.jupiter.api.*;
+import services.ClearService;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class PhaseFourTests {
+
+    @BeforeEach
+    public void setup() throws DataAccessException {
+        GameDAO.clear();
+        AuthDAO.clear();
+        UserDAO.clear();
+    }
 
     @Test
     @DisplayName("Successfully Add AuthToken to Database")
@@ -53,6 +63,8 @@ public class PhaseFourTests {
             AuthDAO.removeToken("70");
         } catch(DataAccessException e){
             Assertions.assertNull(e.getMessage());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -66,6 +78,8 @@ public class PhaseFourTests {
             AuthDAO.removeToken("9999");
         } catch(DataAccessException e){
             Assertions.assertNotNull(e.getMessage());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -163,43 +177,93 @@ public class PhaseFourTests {
     @Test
     @DisplayName("Successfully Add Game to Database")
     public void AddGameSuccess(){
-
+        try {
+            Game g = new Game("ILostTheGame");
+            GameDAO.createGame(g, "12345");
+        } catch (SQLException | DataAccessException e) {
+            Assertions.assertNull(e.getMessage());
+        }
     }
 
     @Test
     @DisplayName("Fail To Add Game to Database")
     public void AddGameFail(){
-
+        try {
+            Game g = new Game("ILostTheGame");
+            GameDAO.createGame(g, "12345");
+            GameDAO.createGame(g, "12345");
+        } catch (SQLException | DataAccessException e) {
+            Assertions.assertEquals("Error: Game Already Exists",e.getMessage());
+        }
     }
 
     @Test
     @Order(3)
     @DisplayName("Successfully Clear Game Database")
     public void ClearGames(){
-
+        try{
+            GameDAO.clear();
+        }catch(DataAccessException e){
+            Assertions.assertNull(e.getMessage());
+        }
     }
 
     @Test
     @DisplayName("Successfully List All Games")
     public void ListGame(){
-
+        try {
+            Game g = new Game("ILostTheGame");
+            Game a = new Game("Howdy");
+            GameDAO.createGame(g, "12395");
+            GameDAO.createGame(a, "09876");
+            ArrayList<Game> games = GameDAO.getAllGames();
+            int size = games.size();
+            Assertions.assertEquals(2, size);
+        } catch (SQLException | DataAccessException e) {
+            Assertions.assertNull(e);
+        }
     }
 
     @Test
     @DisplayName("Fail To List All Games")
     public void ListGameFail(){
-
+        try {
+            Game g = new Game("ILostTheGame");
+            Game a = new Game("Howdy");
+            GameDAO.createGame(g, "12395");
+            GameDAO.createGame(a, "12395");
+            ArrayList<Game> games = GameDAO.getAllGames();
+            int size = games.size();
+        } catch (SQLException | DataAccessException e) {
+            Assertions.assertNotNull(e);
+        }
     }
 
     @Test
     @DisplayName("Successfully Join A Games")
     public void JoinGame(){
-
+        try {
+            Game g = new Game("Hola");
+            GameDAO.createGame(g, "125");
+            User u = new User("name", "pass", "mail");
+            Authtoken token = UserDAO.addNewUser(u);
+            GameDAO.joinGame("125", "WHITE", token.getAuthToken());
+        } catch (SQLException | DataAccessException e) {
+            Assertions.assertNull(e);
+        }
     }
 
     @Test
     @DisplayName("Fail To Join A Games")
     public void JoinGameFail(){
-
+        try {
+            Game g = new Game("Hola");
+            GameDAO.createGame(g, "125");
+            User u = new User("name", "pass", "mail");
+            Authtoken token = UserDAO.addNewUser(u);
+            GameDAO.joinGame("129", "WHITE", token.getAuthToken());
+        } catch (SQLException | DataAccessException e) {
+            Assertions.assertNotNull(e);
+        }
     }
 }

@@ -20,7 +20,7 @@ public class ListGamesService {
     //make a ListGamesResult for each game or just the game associated with the authToken?
         ListGamesResults result = new ListGamesResults(null);
         try {
-            if(AuthDAO.invalidToken(authToken)){
+            if(!AuthDAO.invalidToken(authToken)){
                 result.setMessage("Error: unauthorized");
             }
             result.setGameList(GameDAO.getAllGames());

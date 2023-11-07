@@ -14,6 +14,8 @@ public interface ChessPiece {
 
     void setPromotion(PieceType promotionPiece);
 
+    String serialize();
+
     /**
      * The various different chess piece options
      */
