@@ -1,10 +1,10 @@
 package customTests;
 
+import dataAccess.UserDAO;
 import models.*;
 import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
 import org.junit.jupiter.api.*;
-import services.ClearService;
 
 import java.sql.SQLException;
 
@@ -13,7 +13,7 @@ public class PhaseFourTests {
     @Test
     @DisplayName("Successfully Add AuthToken to Database")
     public void AddToAuthDataSuccess(){
-        Authtoken t = new Authtoken("Jimbo", "69");
+        Authtoken t = new Authtoken("Jimbo", "4");
         try{
             AuthDAO.insertAuth(t);
         }catch(DataAccessException e){
@@ -33,6 +33,7 @@ public class PhaseFourTests {
     }
 
     @Test
+    @Order(1)
     @DisplayName("Clear the AuthToken Database")
     public void ClearAuthData(){
         try{
@@ -45,11 +46,11 @@ public class PhaseFourTests {
     @Test
     @DisplayName("Successfully Remove a Token From the AuthToken Database")
     public void RemoveAuthData(){
-        Authtoken t = new Authtoken("Jimbo", "69");
+        Authtoken t = new Authtoken("Jimbo", "70");
 
         try{
             AuthDAO.insertAuth(t);
-            AuthDAO.removeToken("69");
+            AuthDAO.removeToken("70");
         } catch(DataAccessException e){
             Assertions.assertNull(e.getMessage());
         }
@@ -77,10 +78,8 @@ public class PhaseFourTests {
             boolean check = AuthDAO.invalidToken("30");
             Assertions.assertTrue(check);
 
-        } catch (SQLException e) {
+        } catch (SQLException | DataAccessException e) {
             throw new RuntimeException(e);
-        } catch (DataAccessException ex) {
-            throw new RuntimeException(ex);
         }
     }
 
@@ -100,7 +99,12 @@ public class PhaseFourTests {
     @Test
     @DisplayName("Successfully Add User to Database")
     public void AddUserSuccess(){
-
+        User u = new User("Joe", "mamaPassword", "joemama@gmail.com");
+        try{
+            UserDAO.addNewUser(u);
+        } catch (DataAccessException e) {
+            Assertions.assertNull(e.getMessage());
+        }
     }
 
     @Test
@@ -110,34 +114,51 @@ public class PhaseFourTests {
     }
 
     @Test
+    @Order(2)
     @DisplayName("Successfully Clear User Database")
     public void ClearUser(){
-
-    }
+        try{
+            UserDAO.clear();
+        }catch(DataAccessException e){
+            Assertions.assertNull(e.getMessage());
+        }    }
 
     @Test
     @DisplayName("Successfully Check If User Is In Database")
     public void CheckUser(){
-
+        User u = new User("Joseph", "motherPassword", "serious@email.com");
+        try{
+            UserDAO.addNewUser(u);
+            boolean check = UserDAO.alreadyUser(u);
+            Assertions.assertTrue(check);
+        } catch (DataAccessException e) {
+            Assertions.assertNull(e.getMessage());
+        }
     }
 
     @Test
     @DisplayName("Fail Checking If User Is In Database")
     public void CheckUserFail(){
-
+        User u = new User("Joe", "motherPassword", "serious@email.com");
+        try{
+            boolean check = UserDAO.alreadyUser(u);
+            Assertions.assertFalse(check);
+        } catch (DataAccessException e) {
+            Assertions.assertNull(e.getMessage());
+        }
     }
 
-    @Test
-    @DisplayName("Successfully Login User")
-    public void LoginUser(){
-
-    }
-
-    @Test
-    @DisplayName("Fail To Login User")
-    public void LoginUserFail(){
-
-    }
+//    @Test
+//    @DisplayName("Successfully Login User")
+//    public void LoginUser(){
+//
+//    }
+//
+//    @Test
+//    @DisplayName("Fail To Login User")
+//    public void LoginUserFail(){
+//
+//    }
 
     @Test
     @DisplayName("Successfully Add Game to Database")
@@ -152,6 +173,7 @@ public class PhaseFourTests {
     }
 
     @Test
+    @Order(3)
     @DisplayName("Successfully Clear Game Database")
     public void ClearGames(){
 

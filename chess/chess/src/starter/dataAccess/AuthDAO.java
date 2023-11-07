@@ -64,14 +64,6 @@ public class AuthDAO {
 
     }
 
-    public static String getUsername(String authToken){
-        for(String tokenString: tokenList.keySet()){
-            if(Objects.equals(tokenString, authToken)){
-                return tokenList.get(authToken).getUsername();
-            }
-        }
-        return "";
-    }
     /**
      *returns the list of all auth tokens
      * @return the tokenList
@@ -79,12 +71,6 @@ public class AuthDAO {
      */
 
     public static void removeToken(String authToken) throws DataAccessException{
-//        for(Map.Entry<String, Authtoken> authtokenMap: tokenList.entrySet()){
-//            if(Objects.equals(authtokenMap.getKey(), authToken)){
-//                tokenList.remove(authtokenMap.getKey());
-//                return;
-//            }
-//        }
         Connection con = getConnection();
         try(PreparedStatement prep = con.prepareStatement("DELETE FROM authTokens WHERE token = ?")){
             prep.setString(1, authToken);
@@ -93,9 +79,6 @@ public class AuthDAO {
         } catch (SQLException e) {
             throw new DataAccessException("Error: " + e.getMessage());
         }
-
-
-//        throw new DataAccessException("Error: unauthorized");
     }
 
     public static boolean invalidToken(String authToken) throws DataAccessException, SQLException {
@@ -116,7 +99,28 @@ public class AuthDAO {
         return false;
 //        return !tokenList.containsKey(authToken);
     }
+//Implement a find authToken off of username function?
 
+    public static String getToken(String name) throws DataAccessException {
+        String token = null;
+        Connection conn = Database.getConnection();
+        try (var preparedStatement = conn.prepareStatement("SELECT * FROM authTokens WHERE username=?")) {
+            preparedStatement.setString(1, name);
+            try (var rs = preparedStatement.executeQuery()) {
+                while (rs.next()) {
+                    String username = rs.getString("username");
+                    if(username.equals(name)){
+                        token = rs.getString("token");
+                    }
+                }
+            }
+        } catch(SQLException e){
+            throw new DataAccessException("Error: " + e.getMessage());
+        }
+        return token;
+    }
 
-
+    public static String getUsername(String authToken) {
+        return null;
+    }
 }
