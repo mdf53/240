@@ -1,12 +1,12 @@
 package customTests;
 
+import chess.ChessGame;
 import dataAccess.GameDAO;
 import dataAccess.UserDAO;
 import models.*;
 import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
 import org.junit.jupiter.api.*;
-import services.ClearService;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -14,10 +14,14 @@ import java.util.ArrayList;
 public class PhaseFourTests {
 
     @BeforeEach
-    public void setup() throws DataAccessException {
+    public void setup() {
+        try{
         GameDAO.clear();
         AuthDAO.clear();
         UserDAO.clear();
+        } catch(DataAccessException ex){
+            Assertions.assertNull(ex.getMessage());
+        }
     }
 
     @Test
@@ -251,9 +255,9 @@ public class PhaseFourTests {
         try {
             User u = new User("jo","pass","mail");
             Authtoken t = UserDAO.addNewUser(u);
-            Game g = new Game("1234");
+            Game g = new Game("Howdy");
             GameDAO.createGame(g, t.getAuthToken());
-            GameDAO.joinGame(g.getGameName(), "WHITE", t.getAuthToken());
+            GameDAO.joinGame(g.getGameID(), ChessGame.TeamColor.WHITE, t.getAuthToken());
         } catch (SQLException | DataAccessException e) {
             Assertions.assertNull(e);
         }
@@ -267,7 +271,7 @@ public class PhaseFourTests {
             GameDAO.createGame(g, "125");
             User u = new User("name", "pass", "mail");
             Authtoken token = UserDAO.addNewUser(u);
-            GameDAO.joinGame("129", "WHITE", token.getAuthToken());
+            GameDAO.joinGame(125, ChessGame.TeamColor.WHITE, token.getAuthToken());
         } catch (SQLException | DataAccessException e) {
             Assertions.assertNotNull(e);
         }

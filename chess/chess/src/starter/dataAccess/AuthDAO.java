@@ -125,7 +125,22 @@ public class AuthDAO {
         return token;
     }
 
-    public static String getUsername(String authToken) {
-        return null;
+    public static String getUsername(String authToken) throws DataAccessException {
+        String name = null;
+        Connection conn = Database.getConnection();
+        try (var preparedStatement = conn.prepareStatement("SELECT * FROM authTokens WHERE token =?")) {
+            preparedStatement.setString(1, authToken);
+            try (var rs = preparedStatement.executeQuery()) {
+                while (rs.next()) {
+                    String token = rs.getString("token");
+                    if(token.equals(authToken)){
+                        name = rs.getString("username");
+                    }
+                }
+            }
+        } catch(SQLException e){
+            throw new DataAccessException("Error: " + e.getMessage());
+        }
+        return name;
     }
 }

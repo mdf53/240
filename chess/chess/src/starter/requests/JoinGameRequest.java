@@ -1,4 +1,5 @@
 package requests;
+import chess.ChessGame;
 import dataAccess.DataAccessException;
 import models.Game;
 import dataAccess.GameDAO;
@@ -11,26 +12,29 @@ public class JoinGameRequest {
     /**
      * player color
      */
-    private String playerColor;
+    private ChessGame.TeamColor playerColor;
     /**
      * game ID
      */
-    private String gameID;
+    private int gameID;
 
     /**
      * Constructor that initialized variables
      * @param color is the playerColor
      * @param id is the gameID
      */
-    public JoinGameRequest(String color, String id){
+    public JoinGameRequest(ChessGame.TeamColor color, int id){
         playerColor = color;
         gameID = id;
     }
 
-    public String getGameID(){
+    public int getGameID(){
         return gameID;
     }
-    public String getPlayerColor(){
+    public ChessGame.TeamColor getPlayerColor(){
         return playerColor;
+    }
+    public void setPlayerColor(ChessGame.TeamColor color){
+        playerColor = color;
     }
 }

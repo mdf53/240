@@ -1,15 +1,16 @@
 package models;
 
+import java.util.Comparator;
+import java.util.Objects;
 import java.util.UUID;
 
 import static java.lang.Math.abs;
-import chess.ChessGame;
-import chess.MyChessGame;
+import chess.*;
 
 /**
  * Game object.
  */
-public class Game {
+public class Game implements Comparable<Game> {
     /**
      * ID for game
      */
@@ -35,6 +36,13 @@ public class Game {
         blackUsername = blackU;
         gameID = Integer.valueOf(authToken);
         //figure out game
+    }
+
+    public Game(String gameName, String whiteU, String blackU, int gameID) {
+        this.gameName = gameName;
+        whiteUsername = whiteU;
+        blackUsername = blackU;
+        this.gameID = gameID;
     }
 
 
@@ -78,5 +86,23 @@ public String getGameName(){
 
     public void setGameName(String id) {
         gameName = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Game game = (Game) o;
+        return Objects.equals(gameID, game.gameID) && Objects.equals(whiteUsername, game.whiteUsername) && Objects.equals(blackUsername, game.blackUsername) && Objects.equals(gameName, game.gameName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gameID, whiteUsername, blackUsername, gameName);
+    }
+
+    @Override
+    public int compareTo(Game o) {
+        return o.gameID - this.gameID;
     }
 }

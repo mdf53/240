@@ -1,4 +1,5 @@
 package customTests;
+import chess.ChessGame;
 import dataAccess.DataAccessException;
 import models.*;
 import org.junit.jupiter.api.*;
@@ -180,7 +181,7 @@ public class PhaseThreeTests {
         CreateGameResult createGameResult = createGame(registerResults.getAuthToken());
 
         JoinGameService service = new JoinGameService();
-        JoinGameRequest request = new JoinGameRequest("BLACK", createGameResult.getGameID().toString());
+        JoinGameRequest request = new JoinGameRequest(ChessGame.TeamColor.BLACK, createGameResult.getGameID());
         JoinGameResult result = service.joinGame(request, loginResult.getAuthToken());
 
         assertEquals("Error: unauthorized", result.getMessage());
@@ -195,7 +196,7 @@ public class PhaseThreeTests {
         CreateGameResult createGameResult = createGame(registerResults.getAuthToken());
 
         JoinGameService service = new JoinGameService();
-        JoinGameRequest request = new JoinGameRequest("BLACK", createGameResult.getGameID().toString());
+        JoinGameRequest request = new JoinGameRequest(ChessGame.TeamColor.BLACK, createGameResult.getGameID());
         JoinGameResult result = service.joinGame(request, loginResult.getAuthToken());
 
         assertEquals("Error: unauthorized", result.getMessage());
@@ -209,7 +210,7 @@ public class PhaseThreeTests {
         CreateGameResult createGameResult = createGame(registerResults.getAuthToken());
 
         JoinGameService service = new JoinGameService();
-        JoinGameRequest request = new JoinGameRequest("BLACK", createGameResult.getGameID().toString());
+        JoinGameRequest request = new JoinGameRequest(ChessGame.TeamColor.BLACK, createGameResult.getGameID());
         JoinGameResult result = service.joinGame(request, loginResult.getAuthToken());
 
         assertEquals("Error: unauthorized", result.getMessage());

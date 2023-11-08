@@ -2,10 +2,10 @@ package dataAccess;
 import models.Game;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import chess.*;
 
 /**
  * Manages the data storage of the games.
@@ -23,18 +23,23 @@ public class GameDAO {
      */
     public static void createGame(Game g, String userAuthToken) throws DataAccessException, SQLException {
         //add a new game to the map
-        int gameID = g.getGameID();
-        String whiteUsername = g.getWhiteUsername();
-        String blackUsername = g.getBlackUsername();
-        String name = g.getGameName();
-        String game = g.serialize();
 
         if(!AuthDAO.invalidToken(userAuthToken)){
             throw new DataAccessException("Error: unauthorized");
         }
+        int gameID = g.getGameID();
+        String name = g.getGameName();
+
         if(gameExists(name)){
             throw new DataAccessException("Error: Game Already Exists");
         }
+
+
+        String whiteUsername = g.getWhiteUsername();
+        String blackUsername = g.getBlackUsername();
+        String game = g.serialize();
+
+
         Connection con = Database.getConnection();
         try (var preparedStatement = con.prepareStatement("INSERT INTO games (id, whiteUsername, blackUsername, gameName, game) VALUES(?, ?, ?, ?, ?)")) {
             preparedStatement.setInt(1, gameID);
@@ -59,7 +64,25 @@ public class GameDAO {
             try (var rs = preparedStatement.executeQuery()) {
                 while (rs.next()) {
                     String id = rs.getString("gameName");
-                    if(id.equals(gameName)){
+                    if(Objects.equals(id, gameName)){
+                        return true;
+                    }
+                }
+            }
+        } catch(SQLException e){
+            throw new DataAccessException("Error: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public static boolean gameExists(int gameID) throws DataAccessException {
+        Connection conn = Database.getConnection();
+        try (var preparedStatement = conn.prepareStatement("SELECT * FROM games WHERE id=?")) {
+            preparedStatement.setInt(1, gameID);
+            try (var rs = preparedStatement.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    if(Objects.equals(id, gameID)){
                         return true;
                     }
                 }
@@ -87,8 +110,7 @@ public class GameDAO {
                 String whiteU = resultSet.getString("whiteUsername");
                 String blackU = resultSet.getString("blackUsername");
                 int gameID = resultSet.getInt("id");
-                String game = resultSet.getString("game");
-                result.add(new Game(gameName, whiteU, blackU, gameID, game));
+                result.add(new Game(gameName, whiteU, blackU, gameID));
             }
             Database.closeConnection(con);
         }
@@ -101,48 +123,47 @@ public class GameDAO {
 
     /**
      * allows a player to join a game
-     * @param name  is the name for game to be joined.
+     * @param gameID  is the id for game to be joined.
      * @throws DataAccessException if there's already a user of that color in that game
      */
-    public static void joinGame(String name, String playerColor, String authToken) throws DataAccessException, SQLException {
+    public static void joinGame(int gameID, ChessGame.TeamColor playerColor, String authToken) throws DataAccessException, SQLException {
 
-        if(playerColor == null) return;
-
+        if(playerColor == null) {
+            if(!gameExists(gameID)){
+                throw new DataAccessException("Error: bad request");
+            }
+            return;
+        }
         //User joins game
-
-        Game g = new Game(null);
-        g.setGameName(name);
-        boolean foundID = false;
+        String name;
+//        Game g = new Game(null);
+//        g.setGameName(name);
         ArrayList<Game> gameList = getAllGames();
         for(Game game: gameList){
-            if(Objects.equals(game.getGameName(), g.getGameName())){
-                g = game;
-                if(Objects.equals(playerColor, "WHITE") && g.getWhiteUsername() != null){
+            if(Objects.equals(game.getGameID(), gameID)){
+                if(Objects.equals(playerColor, ChessGame.TeamColor.WHITE) && game.getWhiteUsername() != null){
                     throw new DataAccessException("Error: already taken");
                 }
-                if(Objects.equals(playerColor, "BLACK") && g.getBlackUsername() != null){
+                if(Objects.equals(playerColor, ChessGame.TeamColor.BLACK) && game.getBlackUsername() != null){
                     throw new DataAccessException("Error: already taken");
                 }
-                foundID = true;
-                break;
+                name = game.getGameName();
             }
         }
-        if(!foundID){
-            throw new DataAccessException("Error: bad request");
-        }
+
 
         String username = AuthDAO.getUsername(authToken);
-        String userToUpdate = (Objects.equals(playerColor, "WHITE")) ? "whiteUsername" : "blackUsername";
+        String userToUpdate = (Objects.equals(playerColor, ChessGame.TeamColor.WHITE)) ? "whiteUsername" : "blackUsername";
         Connection con = Database.getConnection();
         try (var preparedStatement = con.prepareStatement("UPDATE games SET " + userToUpdate + " = ? WHERE id = ?")){
             preparedStatement.setString(1, username);
-            preparedStatement.setInt(2, g.getGameID());
+            preparedStatement.setInt(2, gameID);
             preparedStatement.executeUpdate();
             con.close();
         }
-//        catch(SQLException e){
-//            throw new DataAccessException("Error: " + e.getMessage());
-//        }
+        catch(SQLException e){
+            throw new DataAccessException("Error: " + e.getMessage());
+        }
 
     }
 

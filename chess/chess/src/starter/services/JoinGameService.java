@@ -1,4 +1,5 @@
 package services;
+import chess.ChessGame;
 import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
 import dataAccess.GameDAO;
@@ -19,8 +20,8 @@ public class JoinGameService {
      * @return results
      */
     public JoinGameResult joinGame(JoinGameRequest request, String authToken) {
-        String gamename = request.getGameID();
-        String playerColor = request.getPlayerColor();
+        int gameID = request.getGameID();
+        ChessGame.TeamColor playerColor = request.getPlayerColor();
         JoinGameResult result = new JoinGameResult(null);
 
         try {
@@ -28,12 +29,12 @@ public class JoinGameService {
                 result.setMessage("Error: unauthorized");
                 return result;
             }
-//            else if(!GameDAO.gameExists(gamename)){
-//                result.setMessage("Error: bad request");
-//                return result;
-//            }
-            GameDAO.joinGame(gamename, playerColor, authToken);
-            result.setGameID(gamename);
+            else if(!GameDAO.gameExists(gameID)){
+                result.setMessage("Error: bad request");
+                return result;
+            }
+            GameDAO.joinGame(gameID, playerColor, authToken);
+            result.setGameID(gameID);
             result.setPlayerColor(playerColor);
         }catch(DataAccessException | SQLException ex){
             result.setMessage(ex.getMessage());
