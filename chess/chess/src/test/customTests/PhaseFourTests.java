@@ -128,7 +128,12 @@ public class PhaseFourTests {
     @Test
     @DisplayName("Fail To Add User to Database")
     public void AddUserFail(){
-
+        User u = new User(null, "mamaPassword", "joemama@gmail.com");
+        try{
+            UserDAO.addNewUser(u);
+        } catch (DataAccessException e) {
+            Assertions.assertNotNull(e.getMessage());
+        }
     }
 
     @Test
