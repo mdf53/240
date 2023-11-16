@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="libs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/chess/src/libs/passoff-dependencies.jar!/" />
+      <root url="jar://$PROJECT_DIR$/chess/src/libs/tyrus-standalone-client-1.15.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
